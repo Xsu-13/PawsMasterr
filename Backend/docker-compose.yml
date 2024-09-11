@@ -1,0 +1,40 @@
+version: '3.4'
+
+services:
+  backend:
+    image: ${DOCKER_REGISTRY-}backendweb
+    build:
+      context: .
+      dockerfile: Backend/Dockerfile
+    networks:
+      - cooking_network
+
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password123Q
+    ports:
+      - "27017:27017"
+    networks:
+      - cooking_network
+    container_name: mongo_db
+    hostname: mongo
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password123Q
+      ME_CONFIG_MONGODB_URL: mongodb://root:password123Q@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+    networks:
+      - cooking_network
+
+
+networks:
+  cooking_network:
+    driver: bridge

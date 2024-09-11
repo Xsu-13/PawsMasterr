@@ -1,0 +1,22 @@
+.search-input:focus{
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #129575;
+}
+
+.search-textarea{
+    width: 560px;
+}
+
+.search-tab{
+    display: flex;
+}
+
+.search-button{
+    margin-left: 20px;
+    background-color: #129575;
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
