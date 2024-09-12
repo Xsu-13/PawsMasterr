@@ -30,6 +30,12 @@ namespace Cooking.Controllers
             return recipe;
         }
 
+        [HttpGet("search/title={subtitle}")]
+        public async Task<ActionResult<List<RecipeDto>>> SearchByTitle(string subtitle)
+        {
+            return await _recipeService.GetRecipesBySubTitleAsync(subtitle);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Create(RecipeDto recipe)
         {

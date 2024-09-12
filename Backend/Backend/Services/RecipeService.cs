@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Backend.Models;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Backend.Services
 {
@@ -27,6 +30,20 @@ namespace Backend.Services
             var recipe = await _recipes.Find(recipe => recipe.id.ToString() == id).FirstOrDefaultAsync();
             return _mapper.Map<RecipeDto>(recipe);
         }
+        public async Task<List<RecipeDto>> GetRecipesBySubTitleAsync(string subtitle)
+        {
+            var filter = Builders<Recipe>.Filter.Regex(r => r.title, new MongoDB.Bson.BsonRegularExpression(subtitle, "i"));
+            var recipes = await _recipes.Find(filter).ToListAsync();
+
+            return _mapper.Map<List<RecipeDto>>(recipes);
+        }
+        /*public async Task<List<RecipeDto>> GetRecipesByingredientsAsync(string[] ingredients)
+        {
+            var filter = Builders<Recipe>.Filter.Or(
+            ingredients.ConvertAll(ingredients, ingredient => Builders<Recipe>.Filter.Regex("ingredients", new BsonRegularExpression(ingredient, "i"))));
+
+            return _mapper.Map < List < RecipeDto >>( await _recipes.Find(filter).ToListAsync());
+        }*/
 
         public async Task CreateRecipeAsync(RecipeDto recipeDto)
         {
