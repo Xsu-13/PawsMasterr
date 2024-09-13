@@ -17,7 +17,7 @@ namespace Backend.Services
         {
             MongoClient client = new MongoClient(settings.Value.ConnectionURI);
             IMongoDatabase database = client.GetDatabase(settings.Value.DatabaseName);
-            _recipes = database.GetCollection<Recipe>(settings.Value.CollectionName);
+            _recipes = database.GetCollection<Recipe>(settings.Value.RecipesCollection);
             _mapper = mapper;
         }
 
