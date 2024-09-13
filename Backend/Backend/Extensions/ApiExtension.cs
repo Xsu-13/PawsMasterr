@@ -30,7 +30,7 @@ namespace Backend.Extensions
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies["giga"];
+                            context.Token = context.Request.Cookies["token"];
 
                             return Task.CompletedTask;
                         }

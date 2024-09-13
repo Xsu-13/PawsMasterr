@@ -2,6 +2,7 @@ using Backend.Extensions;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -23,7 +24,38 @@ services.AddScoped<UserService>();
 services.AddControllers();
 
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "SmartDocs",
+        Description = "Cutting-edge documentation service <br><br> <a href='api-docs'>Redoc</a>",
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                  });
+    c.CustomSchemaIds(type => type.ToString());
+});
 
 services.AddCors(options =>
 {
@@ -38,6 +70,10 @@ services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseCors();
+app.UseAuthentication();
+app.UseRouting();
+app.UseAuthorization();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -45,21 +81,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseCors();
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-
 app.UseCookiePolicy(new CookiePolicyOptions
 {
     HttpOnly = HttpOnlyPolicy.Always,
     MinimumSameSitePolicy = SameSiteMode.Strict,
     Secure = CookieSecurePolicy.Always
 });
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.MapControllers();
 
