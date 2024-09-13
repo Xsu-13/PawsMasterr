@@ -37,13 +37,17 @@ namespace Backend.Services
 
             return _mapper.Map<List<RecipeDto>>(recipes);
         }
-        /*public async Task<List<RecipeDto>> GetRecipesByingredientsAsync(string[] ingredients)
-        {
-            var filter = Builders<Recipe>.Filter.Or(
-            ingredients.ConvertAll(ingredients, ingredient => Builders<Recipe>.Filter.Regex("ingredients", new BsonRegularExpression(ingredient, "i"))));
 
-            return _mapper.Map < List < RecipeDto >>( await _recipes.Find(filter).ToListAsync());
-        }*/
+        public async Task<List<RecipeDto>> GetRecipesByIngredientsAsync(string[] ingredients)
+        {
+            var filters = ingredients.Select(ingredient =>
+                Builders<Recipe>.Filter.ElemMatch(r => r.ingredients, i => i.name == ingredient)
+            );
+
+            var filter = Builders<Recipe>.Filter.Or(filters);
+
+            return _mapper.Map<List<RecipeDto>>(await _recipes.Find(filter).ToListAsync());
+        }
 
         public async Task CreateRecipeAsync(RecipeDto recipeDto)
         {

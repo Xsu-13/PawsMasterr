@@ -36,6 +36,12 @@ namespace Cooking.Controllers
             return await _recipeService.GetRecipesBySubTitleAsync(subtitle);
         }
 
+        [HttpGet("search/ingredients")]
+        public async Task<ActionResult<List<RecipeDto>>> SearchByIngredients([FromQuery] string[] ingredients)
+        {
+            return await _recipeService.GetRecipesByIngredientsAsync(ingredients);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Create(RecipeDto recipe)
         {
