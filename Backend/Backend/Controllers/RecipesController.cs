@@ -6,7 +6,6 @@ using MongoDB.Bson;
 
 namespace Cooking.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class RecipesController : ControllerBase

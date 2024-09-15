@@ -13,9 +13,14 @@ namespace Backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
-        public UserController(UserService userService)
+        private readonly FavoriteRecipeService _favoriteRecipeService;
+
+        public UserController(
+            UserService userService, 
+            FavoriteRecipeService favoriteRecipeService)
         {
             _userService = userService;
+            _favoriteRecipeService = favoriteRecipeService;
         }
 
         [HttpPost("login")]
@@ -47,6 +52,27 @@ namespace Backend.Controllers
             Response.Cookies.Delete("token");
 
             return Ok();
+        }
+
+        [HttpPost("{recipeId}")]
+        public async Task<IActionResult> AddToFavorites(string userId, string recipeId)
+        {
+            await _favoriteRecipeService.AddRecipeToFavoritesAsync(userId, recipeId);
+            return Ok();
+        }
+
+        [HttpDelete("{recipeId}")]
+        public async Task<IActionResult> RemoveFromFavorites(string userId, string recipeId)
+        {
+            await _favoriteRecipeService.RemoveRecipeFromFavoritesAsync(userId, recipeId);
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFavorites(string userId)
+        {
+            var favoriteRecipes = await _favoriteRecipeService.GetFavoriteRecipesAsync(userId);
+            return Ok(favoriteRecipes);
         }
     }
 }

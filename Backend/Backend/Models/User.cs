@@ -1,4 +1,6 @@
-﻿namespace Backend.Models
+﻿using MongoDB.Bson;
+
+namespace Backend.Models
 {
     public class User
     {
@@ -6,6 +8,8 @@
         public string UserName { get; set; }
         public string Email {  get; set; }  
         public string PasswordHash { get; set; }
+
+        public List<ObjectId> FavoriteRecipes { get; set; } = new List<ObjectId>();
 
         public User(string name, string email, string password)
         {

@@ -19,6 +19,7 @@ services.AddSingleton<JwtProvider>();
 services.AddSingleton<PasswordHasher>();
 services.AddScoped<RecipeService>();
 services.AddScoped<UserService>();
+services.AddScoped<FavoriteRecipeService>();
 
 //services.AddControllersWithViews();
 services.AddControllers();
