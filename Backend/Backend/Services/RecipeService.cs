@@ -66,6 +66,12 @@ namespace Backend.Services
             await _recipes.DeleteOneAsync(r => r.id.ToString() == id);
         }
 
+        public async Task UpdateRecipeImageAsync(string recipeId, string imageUrl)
+        {
+            var update = Builders<Recipe>.Update.Set(r => r.ImageUrl, imageUrl);
+            await _recipes.UpdateOneAsync(r => r.id == ObjectId.Parse(recipeId), update);
+        }
+
         public async Task ImportRecipesAsync(List<RecipeDto> recipeDtos)
         {
             var recipes = _mapper.Map<List<Recipe>>(recipeDtos);

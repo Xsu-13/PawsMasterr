@@ -10,6 +10,7 @@ namespace Backend.Models
         public string PasswordHash { get; set; }
 
         public List<ObjectId> FavoriteRecipes { get; set; } = new List<ObjectId>();
+        public string? ImageUrl { get; set; }
 
         public User(string name, string email, string password)
         {

@@ -74,5 +74,28 @@ namespace Backend.Controllers
             var favoriteRecipes = await _favoriteRecipeService.GetFavoriteRecipesAsync(userId);
             return Ok(favoriteRecipes);
         }
+
+        [HttpPost("{userId}/upload-image")]
+        public async Task<IActionResult> UploadRecipeImage(string userId, IFormFile image)
+        {
+            if (image == null || image.Length == 0)
+            {
+                return BadRequest("Invalid image file.");
+            }
+
+            var fileName = $"{Guid.NewGuid()}_{image.FileName}";
+            var filePath = Path.Combine("wwwroot", "images", "users", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            var imageUrl = $"/images/users/{fileName}";
+
+            await _userService.UpdateRecipeImageAsync(userId, imageUrl);
+
+            return Ok(new { ImageUrl = imageUrl });
+        }
     }
 }

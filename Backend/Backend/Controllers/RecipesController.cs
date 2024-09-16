@@ -75,6 +75,29 @@ namespace Cooking.Controllers
             return NoContent();
         }
 
+        [HttpPost("{recipeId}/upload-image")]
+        public async Task<IActionResult> UploadRecipeImage(string recipeId, IFormFile image)
+        {
+            if (image == null || image.Length == 0)
+            {
+                return BadRequest("Invalid image file.");
+            }
+
+            var fileName = $"{Guid.NewGuid()}_{image.FileName}";
+            var filePath = Path.Combine("wwwroot", "images", "recipes", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            var imageUrl = $"/images/recipes/{fileName}";
+
+            await _recipeService.UpdateRecipeImageAsync(recipeId, imageUrl);
+
+            return Ok(new { ImageUrl = imageUrl });
+        }
+
         [HttpPost("import")]
         public async Task<IActionResult> Import([FromBody]List<RecipeDto> recipes)
         {
