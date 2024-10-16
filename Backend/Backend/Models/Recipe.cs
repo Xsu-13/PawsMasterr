@@ -12,5 +12,7 @@ namespace Backend.Models
         public string? prep_time { get; set; }
         public string? cook_time { get; set; }
         public List<string> steps { get; set; }
+
+        public string? ImageUrl { get; set; }
     }
 }
