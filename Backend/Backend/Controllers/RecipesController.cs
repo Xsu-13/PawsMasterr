@@ -2,6 +2,7 @@
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using MongoDB.Bson;
 
 namespace Cooking.Controllers
@@ -31,16 +32,45 @@ namespace Cooking.Controllers
             return recipe;
         }
 
-        [HttpGet("search/title={subtitle}")]
-        public async Task<ActionResult<List<RecipeDto>>> SearchByTitle(string subtitle)
+        [HttpGet("search")]
+        public async Task<ActionResult<List<RecipeDto>>> Search([FromQuery] string? subtitle, [FromQuery] string[]? ingredients, [FromQuery] int? ingredientsCount, [FromQuery] int? servingsCount)
         {
-            return await _recipeService.GetRecipesBySubTitleAsync(subtitle);
-        }
+            List<RecipeDto> recipes = new();
 
-        [HttpGet("search/ingredients")]
-        public async Task<ActionResult<List<RecipeDto>>> SearchByIngredients([FromQuery] string[] ingredients)
-        {
-            return await _recipeService.GetRecipesByIngredientsAsync(ingredients);
+            if (!string.IsNullOrEmpty(subtitle))
+            {
+                recipes = await _recipeService.GetRecipesBySubTitleAsync(subtitle);
+            }
+            else if (ingredients != null && ingredients.Any())
+            {
+                recipes = await _recipeService.GetRecipesByIngredientsAsync(ingredients);
+            }
+            else if (ingredientsCount.HasValue)
+            {
+                recipes = await _recipeService.GetRecipesByIngredientsCountAsync(ingredientsCount.Value);
+            }
+            else if (servingsCount.HasValue)
+            {
+                recipes = await _recipeService.GetRecipesByPersonCountAsync(servingsCount.Value);
+            }
+            else
+            {
+                recipes = await _recipeService.GetRecipesAsync();
+            }
+
+            if (!string.IsNullOrEmpty(subtitle))
+                recipes = recipes.Intersect(await _recipeService.GetRecipesBySubTitleAsync(subtitle), new RecipeDtoComparer()).ToList();
+
+            if (ingredients != null && ingredients.Length > 0)
+                recipes = recipes.Intersect(await _recipeService.GetRecipesByIngredientsAsync(ingredients), new RecipeDtoComparer()).ToList();
+
+            if (ingredientsCount.HasValue)
+                recipes = recipes.Intersect(await _recipeService.GetRecipesByIngredientsCountAsync(ingredientsCount.Value), new RecipeDtoComparer()).ToList();
+
+            if (servingsCount.HasValue)
+                recipes = recipes.Intersect(await _recipeService.GetRecipesByPersonCountAsync(servingsCount.Value), new RecipeDtoComparer()).ToList();
+
+            return recipes;
         }
 
         [HttpPost]

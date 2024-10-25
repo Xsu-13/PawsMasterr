@@ -49,6 +49,20 @@ namespace Backend.Services
             return _mapper.Map<List<RecipeDto>>(await _recipes.Find(filter).ToListAsync());
         }
 
+        public async Task<List<RecipeDto>> GetRecipesByIngredientsCountAsync(int ingredientsCount)
+        {
+            var recipes = await _recipes.Find(recipe => recipe.ingredients.Count() <= ingredientsCount).ToListAsync();
+
+            return _mapper.Map<List<RecipeDto>>(recipes);
+        }
+
+        public async Task<List<RecipeDto>> GetRecipesByPersonCountAsync(int personCount)
+        {
+            var recipes = await _recipes.Find(recipe => recipe.servings == personCount).ToListAsync();
+
+            return _mapper.Map<List<RecipeDto>>(recipes);
+        }
+
         public async Task CreateRecipeAsync(RecipeDto recipeDto)
         {
             var recipe = _mapper.Map<Recipe>(recipeDto);
