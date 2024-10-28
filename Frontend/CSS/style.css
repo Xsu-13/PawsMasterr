@@ -1,0 +1,348 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  background-color: #fcf7f0;
+  margin: 0 110px;
+}
+
+.list-reset {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.btn-reset {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  height: 90px;
+  padding-top: 60px;
+  margin-bottom: 70px;
+}
+
+.header__logo {
+  margin-right: 30px;
+}
+
+.header__nav {
+  display: flex;
+  gap: 50px;
+  margin-right: 80px;
+  margin-top: 15px;
+}
+
+.header__icons {
+  display: flex;
+  gap: 30px;
+  margin-top: 15px;
+}
+
+.header__title {
+  margin-right: auto;
+  font-family: Caveat;
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 75px;
+  text-align: left;
+}
+
+.header__link {
+  font-family: Roboto;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 35.56px;
+  text-align: left;
+}
+
+.lapki_left {
+  position: absolute;
+  left: 30px;
+  top: 250%; 
+  z-index: -1;
+}
+
+.lapki_right {
+  position: absolute;
+  right: 30px;
+  top: 40%;
+  z-index: -1;
+}
+
+.podbor__title {
+  margin: 0;
+  font-family: Roboto;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 50px;
+  text-align: left;
+  color: #000000;
+  margin-bottom: 30px;
+}
+
+.help-block {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.help__title {
+  font-family: Roboto;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 31.25px;
+  text-align: left;
+  color: #000000;
+  margin-bottom: 15px;
+}
+
+.help__input::placeholder {
+  font-family: Roboto;
+  font-size: 18.42px;
+  font-weight: 400;
+  line-height: 23.83px;
+  text-align: left;
+  color: #9F9F9F;
+}
+
+.help__input {
+  font-family: Roboto;
+  font-size: 18.42px;
+  font-weight: 400;
+  line-height: 23.83px;
+  text-align: left;
+  color: #000000;
+  border: 0.39px solid #000000;
+  border-radius: 8px;
+  padding: 10px 15px;
+  width: 260px;
+}
+
+.search__input {
+  width: 360px;
+  background-image: url(../images/search.svg);
+  background-repeat: no-repeat;
+  background-position: 20px 10px;
+  padding: 10px 55px;
+}
+
+.filters__block {
+  display: flex;
+  gap: 10px;
+}
+
+.podbor__button {
+  width: 270px;
+  height: 50px;
+  padding: 17px 50px;
+  border-radius: 8px;
+  background: #342619;
+  color: #fff;
+}
+
+.podbor {
+  margin-bottom: 50px;
+}
+
+.recepts {
+  background-color: #fff;
+  border-radius: 35px;
+  border: 1px solid #36281C;
+  padding: 70px;
+  margin-bottom: 60px;
+}
+
+.recepts__title {
+  font-family: Roboto;
+  font-size: 35px;
+  font-weight: 400;
+  line-height: 43.75px;
+  text-align: left;
+  color: black;
+}
+
+.recepts__header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.recepts__icons {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  font-family: Roboto;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  text-align: left;
+  color: black;
+}
+
+.recepts__icons-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.recepts__heart {
+  margin-left: 70px;
+  margin-bottom: 30px;
+}
+
+.recepts__ingridients {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.recepts__image {
+  width: 48%;
+}
+
+.recepts__ingridients-block {
+  width: 48%;
+}
+
+.recepts__ingridients-title {
+  font-family: Roboto;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 37.5px;
+  text-align: left;
+  color: black;
+  margin-bottom: 30px;
+}
+
+.recepts__ingridients-block-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: Roboto;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  text-align: left;
+  color: black;
+}
+
+.recepts__ingridients-block-list-item {
+  display: flex;
+}
+
+.recepts__ingridients-name {
+  margin-right: auto;
+}
+
+.recepts__description {
+  display: flex;
+  justify-content: space-between;
+}
+
+.recepts__description-text {
+  width: 48%;
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 31.25px;
+  text-align: left;
+  color: black;
+}
+
+.recepts__description-instruction {
+  width: 48%;
+}
+
+.recepts__description-instruction-name {
+  font-family: Roboto;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 37.5px;
+  text-align: left;
+  color: black;
+  margin-bottom: 40px;
+}
+
+.recepts__description-instruction-list-item {
+  display: flex;
+  gap: 25px;
+}
+
+.recepts__description-instruction-list-item-num { 
+  font-family: Roboto;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 25px;
+  text-align: left;
+  color: #000000;
+}
+
+.recepts__description-instruction-list-item-text {
+  font-family: Roboto;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+  text-align: left;
+  color: black;
+}
+
+.recepts__description-instruction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.new-recept {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 300px;
+}
+
+.new-recept__text {
+  font-family: Roboto;
+  font-size: 35px;
+  font-weight: 500;
+  line-height: 43.75px;
+  text-align: left;
+  color: black;
+}
+
+.new-recept__button {
+  width: 320px;
+  height: 50px;
+  padding: 16px 30px;
+  border-radius: 8px;
+  background: #342619;
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.09px;
+  text-align: center;
+  color: white;
+}
+
+.recepti {
+  display: none;
+}
