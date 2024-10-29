@@ -1,10 +1,75 @@
 document.addEventListener("DOMContentLoaded", () => {
-    (async () => {
-        recipes = await fetchGetRecipes();
 
-        recipes.data = recipes.data.slice(0, 20);
+    let selectedIngredients = [];
 
-        recipes.data.forEach(recipe => {
+    // Получаем поле ввода для ингредиентов
+    const ingredientsInput = document.querySelector('.ingridients .search__input');
+
+    // Добавляем обработчик события нажатия клавиши
+    ingredientsInput.addEventListener('keydown', function (event) {
+        // Проверяем, была ли нажата клавиша Enter
+        if (event.key === 'Enter') {
+            // Получаем значение из поля ввода
+            const ingredient = ingredientsInput.value.trim();
+
+            // Проверяем, не пустое ли значение
+            if (ingredient) {
+                selectedIngredients.push(ingredient);
+                console.log('Ингредиенты:', selectedIngredients); // Выводим в консоль
+                ingredientsInput.value = ''; // Очищаем поле ввода после вывода
+            }
+        }
+    });
+
+    const filterButton = document.querySelector('.podbor__button');
+
+    // Добавляем обработчик события клика
+    filterButton.addEventListener('click', async function () {
+        // Получаем значения из полей ввода
+        const searchInput = document.querySelector('.search__input').value;
+        const ingredientsCountInput = document.querySelector('.filters__block input:nth-child(1)').value;
+        const servingsCountInput = document.querySelector('.filters__block input:nth-child(2)').value;
+
+        // Выводим значения в консоль (или выполняем другие действия)
+        console.log('Поиск:', searchInput);
+        console.log('Ингредиенты:', selectedIngredients);
+        console.log('Количество ингредиентов:', ingredientsCountInput);
+        console.log('Число персон:', servingsCountInput);
+
+        let recipes = await fetchGetRecipesWithFilter(subtitle = searchInput, ingredients = selectedIngredients, ingredientsCount = ingredientsCountInput, servingsCount = servingsCountInput);
+        console.log(recipes);
+
+        showRecipes(recipes);
+    });
+
+
+    var clearRecipes = () => {
+        var recipesElements = document.getElementsByClassName("recepts");
+
+        if (recipesElements && recipesElements.length > 0) {
+            // Преобразуем HTMLCollection в массив и проходим по каждому элементу
+            Array.from(recipesElements).forEach(recipe => {
+                recipe.parentNode.removeChild(recipe); // Удаляем элемент из родителя
+            });
+        }
+    }
+
+    var showRecipes = async (recipesParam) => {
+
+        clearRecipes();
+
+        if (recipesParam == null) {
+            recipes = (await fetchGetRecipes()).data;
+        }
+        else {
+            recipes = recipesParam;
+        }
+
+        //ПОТОМ ИЗМЕНИТЬ!
+        if (recipes.length > 20)
+            recipes = recipes.slice(0, 20);
+
+        recipes.forEach(recipe => {
             // Создаем секцию рецептов
             const section = document.createElement('section');
             section.className = 'recepts';
@@ -207,5 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
         //  // Добавляем секцию в body или другой контейнер
         //  elem.appendChild(newsection);
 
-    })();
+    };
+
+
+    showRecipes();
 });
