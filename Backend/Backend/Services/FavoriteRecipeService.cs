@@ -40,12 +40,10 @@ namespace Backend.Services
         public async Task<List<RecipeDto>> GetFavoriteRecipesAsync(string userId)
         {
             var user = await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
-
-            if (user == null || user.FavoriteRecipes.Count == 0)
+            if (user == null || user?.FavoriteRecipes.Count == 0)
             {
                 return new List<RecipeDto>();
             }
-
             var favoriteRecipes = await _recipes.Find(r => user.FavoriteRecipes.Contains(r.id)).ToListAsync();
 
             return _mapper.Map<List<RecipeDto>>(favoriteRecipes);

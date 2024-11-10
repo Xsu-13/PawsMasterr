@@ -54,6 +54,11 @@ namespace Backend.Services
             await _users.InsertOneAsync(user);
         }
 
+        public async Task<User> GetUserInfo(string userId)
+        {
+            return await _users.Find(user => user.Id == userId).FirstOrDefaultAsync();
+        }
+
         public async Task UpdateRecipeImageAsync(string userId, string imageUrl)
         {
             var update = Builders<User>.Update.Set(r => r.ImageUrl, imageUrl);

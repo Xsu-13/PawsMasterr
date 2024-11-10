@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
     let selectedIngredients = [];
 
@@ -245,33 +245,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Добавляем секцию на страницу (например, в body)
             let elem = document.getElementById("recepti");
+            let podbor = document.getElementById("podbor");
             elem.appendChild(section);
 
+            podbor.after(section);
+
         });
-
-        //         let elem = document.getElementById("recepti");
-        // elem.appendChild(section);
-        //  // Создаем элемент section
-        //  const newsection = document.createElement('section');
-        //  newsection.className = 'new-recept';
-
-        //  // Создаем элемент div для текста
-        //  const textDiv = document.createElement('div');
-        //  textDiv.className = 'new-recept__text';
-        //  textDiv.textContent = 'Не нашли рецепт? Добавьте сами!';
-
-        //  // Создаем элемент div для кнопки
-        //  const buttonDiv = document.createElement('div');
-        //  buttonDiv.className = 'new-recept__button btn-reset';
-        //  buttonDiv.textContent = 'Добавить';
-
-        //  // Добавляем текст и кнопку в секцию
-        //  section.appendChild(textDiv);
-        //  section.appendChild(buttonDiv);
-
-        //  // Добавляем секцию в body или другой контейнер
-        //  elem.appendChild(newsection);
-
     };
 
 
