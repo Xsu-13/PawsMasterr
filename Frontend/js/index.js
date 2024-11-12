@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     let selectedIngredients = [];
@@ -37,7 +39,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log('Число персон:', servingsCountInput);
 
         let recipes = await fetchGetRecipesWithFilter(subtitle = searchInput, ingredients = selectedIngredients, ingredientsCount = ingredientsCountInput, servingsCount = servingsCountInput);
-        console.log(recipes);
 
         showRecipes(recipes);
     });
@@ -244,7 +245,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             descriptionInstructionContainer.appendChild(instructionsContainer);
 
             // Добавляем секцию на страницу (например, в body)
-            let elem = document.getElementById("recepti");
+            let elem = document.getElementById("recepts");
             let podbor = document.getElementById("podbor");
             elem.appendChild(section);
 
@@ -252,10 +253,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         });
     };
-
-
-    showRecipes();
-
 
     document.querySelector('.main').style.display = 'block';
     document.querySelector('.recepti').style.display = 'none';
@@ -272,6 +269,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Показываем нужный блок
             if (this.id === 'recepti') {
+                showRecipes();
                 document.querySelector('.recepti').style.display = 'block';
             } else if (this.id === 'podborki') {
                 document.querySelector('.podborki').style.display = 'block';
