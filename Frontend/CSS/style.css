@@ -66,6 +66,7 @@ body {
   font-weight: 700;
   line-height: 75px;
   text-align: left;
+  cursor: pointer;
 }
 
 .header__link {
@@ -429,6 +430,7 @@ body {
   display: inline;
   color: gray;
   border-bottom: 2px solid gray;
+  cursor: pointer;
 }
 
 .main {
@@ -489,4 +491,170 @@ body {
   text-align: center;
   color: white;
   background: #342619;
+}
+
+.profil .recepts__heart path {
+  fill: #36281C;
+}
+
+.add-form {
+  display: flex;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  border-radius: 35px;
+  border: 1px solid black;
+  background: #FFFFFF;
+  gap: 150px;
+  padding: 30px 50px;
+  visibility: hidden; /* Скрываем форму изначально */
+  opacity: 0; /* Начальная прозрачность */
+  transition: opacity 0.3s ease, visibility 0.5s ease; /* Плавный переход для прозрачности и видимости */
+}
+
+.add-form.show {
+  visibility: visible; /* Делаем форму видимой */
+  opacity: 1; /* Полная непрозрачность */
+}
+
+.add-form__input {
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid black;
+  padding: 10px 10px;
+}
+
+.add-form__left {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form__right {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form__left-header {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.add-form__icons {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+}
+
+.add-form__ingridients {
+  display: flex;
+  justify-content: space-between;
+  width: 420px;
+}
+
+.add-form__icons-input {
+  width: 70px;
+}
+
+.add-form__icons-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-form__add-photo {
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.09px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #BBBBBB;
+  margin-bottom: 40px;
+  background-image: url(../images/paperclip.svg);
+  background-repeat: no-repeat;
+  padding-left: 30px;
+  background-position: center left;
+}
+
+.add-form__right svg {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  cursor: pointer;
+}
+
+.add-form__descr {
+  height: 100px;
+  margin-bottom: 40px;
+}
+
+.add-form__instruction {
+  font-family: Roboto;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 37.5px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: black;
+  margin-bottom: 30px;
+}
+
+.add-form__descr-cook {
+  height: 80px;
+}
+
+.add-form__name {
+  font-family: Roboto;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 37.5px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: black;
+  margin-bottom: 30px;
+}
+
+.add-form__block-product-name {
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.09px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: black;
+}
+
+.add-form__block-count-name {
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.09px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: black;
+}
+
+.add-form__block-product {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-form__block-count {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-form__block-count-input {
+  width: 60px;
 }
