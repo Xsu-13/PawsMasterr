@@ -255,4 +255,47 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     showRecipes();
+
+
+    document.querySelector('.main').style.display = 'block';
+    document.querySelector('.recepti').style.display = 'none';
+    document.querySelector('.podborki').style.display = 'none';
+    document.querySelector('.profil').style.display = 'none';
+
+    document.querySelectorAll('.header__link').forEach(link => {
+        link.addEventListener('click', function () {
+            // Скрываем все блоки
+            document.querySelector('.main').style.display = 'none';
+            document.querySelector('.recepti').style.display = 'none';
+            document.querySelector('.podborki').style.display = 'none';
+            document.querySelector('.profil').style.display = 'none';
+
+            // Показываем нужный блок
+            if (this.id === 'recepti') {
+                document.querySelector('.recepti').style.display = 'block';
+            } else if (this.id === 'podborki') {
+                document.querySelector('.podborki').style.display = 'block';
+            } else if (this.id === 'profil') {
+                document.querySelector('.profil').style.display = 'block';
+            } else if (this.id === 'main') {
+                document.querySelector('.main').style.display = 'block';
+            }
+        });
+    });
+
+    const form = document.querySelector('.add-form');
+    document.querySelectorAll('.new').forEach(button => {
+        button.addEventListener('click', () => {
+            form.classList.add('show'); // Добавляем класс для показа формы
+        });
+    });
+    const closeButton = document.querySelector('.add-form__right svg');
+    closeButton.addEventListener('click', () => {
+        form.classList.remove('show');
+    })
+
+    document.querySelector('.add-form__add-photo').addEventListener('click', (event) => {
+        event.preventDefault(); // Отменяем стандартное поведение ссылки
+        document.getElementById('file-input').click(); // Открываем диалог выбора файла
+    });
 });
