@@ -1,5 +1,6 @@
 ﻿using Backend.Models;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -28,6 +29,18 @@ namespace Cooking.Controllers
                 return NotFound();
             }
             return recipe;
+        }
+
+        [HttpGet("search/title={subtitle}")]
+        public async Task<ActionResult<List<RecipeDto>>> SearchByTitle(string subtitle)
+        {
+            return await _recipeService.GetRecipesBySubTitleAsync(subtitle);
+        }
+
+        [HttpGet("search/ingredients")]
+        public async Task<ActionResult<List<RecipeDto>>> SearchByIngredients([FromQuery] string[] ingredients)
+        {
+            return await _recipeService.GetRecipesByIngredientsAsync(ingredients);
         }
 
         [HttpPost]
@@ -60,6 +73,29 @@ namespace Cooking.Controllers
             }
             await _recipeService.DeleteRecipeAsync(id);
             return NoContent();
+        }
+
+        [HttpPost("{recipeId}/upload-image")]
+        public async Task<IActionResult> UploadRecipeImage(string recipeId, IFormFile image)
+        {
+            if (image == null || image.Length == 0)
+            {
+                return BadRequest("Invalid image file.");
+            }
+
+            var fileName = $"{Guid.NewGuid()}_{image.FileName}";
+            var filePath = Path.Combine("wwwroot", "images", "recipes", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            var imageUrl = $"/images/recipes/{fileName}";
+
+            await _recipeService.UpdateRecipeImageAsync(recipeId, imageUrl);
+
+            return Ok(new { ImageUrl = imageUrl });
         }
 
         [HttpPost("import")]
