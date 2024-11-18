@@ -1,6 +1,6 @@
 axios.defaults.withCredentials = true;
 
-let domen = "https://localhost:50612";
+let domen = "https://localhost:50675";
 
 const fetchGetRecipes = async () => {
     try {
@@ -91,7 +91,8 @@ const fetchRemoveFromFavorites = async (userId, recipeId) => {
 
 const fetchPostRecipe = async (recipe) => {
     try {
-        await axios.post(domen + `/api/Recipes`, recipe)
+        let response = await axios.post(domen + `/api/Recipes`, recipe)
+        return response;
     }
     catch (e) {
         console.log(e);

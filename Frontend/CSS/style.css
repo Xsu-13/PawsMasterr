@@ -658,3 +658,10 @@ body {
 .add-form__block-count-input {
   width: 60px;
 }
+
+.photo-preview {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: fit-content;
+  display: inline-block;
+}

@@ -250,7 +250,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             elem.appendChild(section);
 
             podbor.after(section);
-
         });
     };
 
@@ -284,7 +283,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const form = document.querySelector('.add-form');
     document.querySelectorAll('.new').forEach(button => {
         button.addEventListener('click', () => {
-            form.classList.add('show'); // Добавляем класс для показа формы
+            form.classList.add('show');
         });
     });
     const closeButton = document.querySelector('.add-form__right svg');
@@ -293,7 +292,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
 
     document.querySelector('.add-form__add-photo').addEventListener('click', (event) => {
-        event.preventDefault(); // Отменяем стандартное поведение ссылки
-        document.getElementById('file-input').click(); // Открываем диалог выбора файла
+        event.preventDefault();
+        document.getElementById('file-input').click();
+    });
+
+    document.getElementById('file-input').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        
+        if (file) {
+            // Проверка типа файла
+            if (!file.type.startsWith('image/')) {
+                alert('Пожалуйста, выберите файл изображения.');
+                return;
+            }
+            
+            // Создание URL для файла и отображение его в <img>
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const previewImage = document.getElementById('preview-image');
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+            };
+            reader.readAsDataURL(file); // Преобразование файла в DataURL
+        }
     });
 });
