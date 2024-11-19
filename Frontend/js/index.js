@@ -2,6 +2,11 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    let user = await fetchGetUser('66e758ae205c94eb5142bb98');
+    let fav_recipes = await fetchGetFavoriteRecipes('66e758ae205c94eb5142bb98');
+    let userName = document.getElementById("profil__name");
+    userName.innerHTML = user.userName;
+
     let selectedIngredients = [];
 
     // Получаем поле ввода для ингредиентов
@@ -74,6 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Создаем секцию рецептов
             const section = document.createElement('section');
             section.className = 'recepts';
+            section.id = recipe.id;
 
             // Создаем заголовок рецепта
             const header = document.createElement('div');
@@ -118,10 +124,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                     svg: '<svg width="27" height="29" viewBox="0 0 27 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.5625 27C23.9437 27 24.3094 26.8495 24.579 26.5816C24.8485 26.3137 25 25.9503 25 25.5714V23.7914C25.0057 19.7829 19.2874 16.6429 13.5 16.6429C7.71262 16.6429 2 19.7829 2 23.7914V25.5714C2 25.9503 2.15145 26.3137 2.42103 26.5816C2.69062 26.8495 3.05625 27 3.4375 27H23.5625ZM18.6807 7.14857C18.6807 7.82469 18.5467 8.49419 18.2864 9.11885C18.026 9.7435 17.6444 10.3111 17.1633 10.7892C16.6823 11.2672 16.1111 11.6465 15.4826 11.9052C14.854 12.164 14.1803 12.2971 13.5 12.2971C12.8197 12.2971 12.146 12.164 11.5174 11.9052C10.8889 11.6465 10.3177 11.2672 9.83665 10.7892C9.35558 10.3111 8.97397 9.7435 8.71361 9.11885C8.45325 8.49419 8.31925 7.82469 8.31925 7.14857C8.31925 5.78309 8.86508 4.47353 9.83665 3.50798C10.8082 2.54244 12.126 2 13.5 2C14.874 2 16.1918 2.54244 17.1633 3.50798C18.1349 4.47353 18.6807 5.78309 18.6807 7.14857Z" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
                     text: recipe.servings + ' чел'
                 },
-                {
-                    svg: '<svg class="recepts__heart" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 6.01136L15.9321 4.39979C12.2476 0.612646 5.49969 1.91996 3.06328 6.67809C1.91742 8.91588 1.65977 12.146 3.75001 16.2697C5.76313 20.2412 9.94804 24.9954 17.5 30.1757C25.052 24.9954 29.2369 20.2412 31.25 16.2697C33.3402 12.146 33.0826 8.91588 31.9367 6.67809C29.5003 1.91996 22.7524 0.612646 19.0679 4.39979L17.5 6.01136ZM17.5 32.8125C-16.0412 10.6496 7.17228 -6.6519 17.1157 2.50049C17.2461 2.62056 17.3743 2.74517 17.5 2.87438C17.6257 2.74518 17.7539 2.62057 17.8843 2.50051C27.8277 -6.65192 51.0412 10.6496 17.5 32.8125Z" fill="#36281C"/></svg>',
-                }
+
             ];
+
+
+            if (recipesParam != null) {
+                iconsData.push({
+                    svg: '<svg class="recepts__heart fav" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 6.01136L15.9321 4.39979C12.2476 0.612646 5.49969 1.91996 3.06328 6.67809C1.91742 8.91588 1.65977 12.146 3.75001 16.2697C5.76313 20.2412 9.94804 24.9954 17.5 30.1757C25.052 24.9954 29.2369 20.2412 31.25 16.2697C33.3402 12.146 33.0826 8.91588 31.9367 6.67809C29.5003 1.91996 22.7524 0.612646 19.0679 4.39979L17.5 6.01136ZM17.5 32.8125C-16.0412 10.6496 7.17228 -6.6519 17.1157 2.50049C17.2461 2.62056 17.3743 2.74517 17.5 2.87438C17.6257 2.74518 17.7539 2.62057 17.8843 2.50051C27.8277 -6.65192 51.0412 10.6496 17.5 32.8125Z" fill="#36281C"/></svg>',
+                })
+            }
+            else {
+                iconsData.push({
+                    svg: '<svg class="recepts__heart" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 6.01136L15.9321 4.39979C12.2476 0.612646 5.49969 1.91996 3.06328 6.67809C1.91742 8.91588 1.65977 12.146 3.75001 16.2697C5.76313 20.2412 9.94804 24.9954 17.5 30.1757C25.052 24.9954 29.2369 20.2412 31.25 16.2697C33.3402 12.146 33.0826 8.91588 31.9367 6.67809C29.5003 1.91996 22.7524 0.612646 19.0679 4.39979L17.5 6.01136ZM17.5 32.8125C-16.0412 10.6496 7.17228 -6.6519 17.1157 2.50049C17.2461 2.62056 17.3743 2.74517 17.5 2.87438C17.6257 2.74518 17.7539 2.62057 17.8843 2.50051C27.8277 -6.65192 51.0412 10.6496 17.5 32.8125Z" fill="#36281C"/></svg>',
+                })
+            }
 
             // Добавляем иконки в контейнер
             iconsData.forEach(icon => {
@@ -245,12 +261,43 @@ document.addEventListener("DOMContentLoaded", async () => {
             descriptionInstructionContainer.appendChild(instructionsContainer);
 
             // Добавляем секцию на страницу (например, в body)
-            let elem = document.getElementById("recepts");
-            let podbor = document.getElementById("podbor");
-            elem.appendChild(section);
+            if (recipesParam != null) {
+                let elem = document.getElementById("fav_recepts");
+                elem.appendChild(section);
+            }
+            else {
+                let elem = document.getElementById("recepts");
+                let podbor = document.getElementById("podbor");
+                elem.appendChild(section);
 
-            podbor.after(section);
+                podbor.after(section);
+            }
+
         });
+
+        let recips = document.getElementsByClassName("recepts__heart");
+
+        [...recips].forEach((elem) => {
+            elem.addEventListener('click', async function () {
+
+                let recipt = elem.closest('.recepts');
+                if (elem.classList.contains('fav')) {
+                    await fetchRemoveFromFavorites(user.id, recipt.id);
+                    elem.classList.remove('fav');
+                    fav_recipes = fav_recipes.filter(item => item.id !== recipt.id);
+                    showRecipes(fav_recipes);
+                }
+                else {
+                    await fetchAddToFavorites(user.id, recipt.id);
+                    elem.classList.add('fav');
+
+                    let newFav = await fetchGetRecipeById(recipt.id);
+                    fav_recipes.add(newFav);
+                    showRecipes(fav_recipes);
+                }
+
+            })
+        })
     };
 
     document.querySelector('.main').style.display = 'block';
@@ -273,6 +320,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else if (this.id === 'podborki') {
                 document.querySelector('.podborki').style.display = 'block';
             } else if (this.id === 'profil') {
+                showRecipes(fav_recipes);
                 document.querySelector('.profil').style.display = 'block';
             } else if (this.id === 'main') {
                 document.querySelector('.main').style.display = 'block';
@@ -298,14 +346,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById('file-input').addEventListener('change', (event) => {
         const file = event.target.files[0];
-        
+
         if (file) {
             // Проверка типа файла
             if (!file.type.startsWith('image/')) {
                 alert('Пожалуйста, выберите файл изображения.');
                 return;
             }
-            
+
             // Создание URL для файла и отображение его в <img>
             const reader = new FileReader();
             reader.onload = function (e) {

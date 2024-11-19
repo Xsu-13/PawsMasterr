@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const addRecipeButton = document.getElementById('add-recipt-button');
 
     addRecipeButton.addEventListener('click', async function () {
-        
+
         const recipe_name = document.getElementById('recipt_input_name').value;
         const recipe_prep_time = document.getElementById('recipt_input_preparation_time').value;
         const recipe_cooking_time = document.getElementById('recipt_input_cooking_time').value;
@@ -40,3 +40,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         await fetchUploadRecipeImage(response.data.id, recipe_file);
     });
 });
+
+function GoToProfile() {
+    document.querySelector('.main').style.display = 'none';
+    document.querySelector('.recepti').style.display = 'none';
+    document.querySelector('.podborki').style.display = 'none';
+    document.querySelector('.profil').style.display = 'none';
+
+    showRecipes(fav_recipes);
+    document.querySelector('.profil').style.display = 'block';
+}

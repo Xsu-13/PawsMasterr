@@ -1,6 +1,6 @@
 axios.defaults.withCredentials = true;
 
-let domen = "https://localhost:50675";
+let domen = "https://localhost:51187";
 
 const fetchGetRecipes = async () => {
     try {
@@ -31,7 +31,7 @@ const fetchGetRecipesWithFilter = async (subtitle, ingredients, ingredientsCount
     }
 
     try {
-        const response = await fetch(domen+`/api/Recipes/search?${params.toString()}`, {
+        const response = await fetch(domen + `/api/Recipes/search?${params.toString()}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

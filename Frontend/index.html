@@ -70,7 +70,7 @@
             </section>
             <section class="new-recept">
                 <div class="new-recept__text">Не нашли рецепт? Добавьте сами!</div>
-                <div class="new-recept__button new btn-reset">Добавить</div>
+                <div class="new-recept__button new btn-reset" onclick="GoToProfile()">Добавить</div>
             </section>
         </div>
         <div class="podborki">
@@ -92,11 +92,12 @@
         </div>
         <div class="profil">
             <div class="proful__block">
-                <img src="../images/Rectangle 659.png" alt="" class="profil__img">
-                <p class="profil__name">пользователь 1</p>
+                <img src="../images/Rectangle 659.png" alt="" id="profil__img" class="profil__img">
+                <p class="profil__name" id="profil__name">пользователь 1</p>
             </div>
             <p class="profil__favorite">Избранное</p>
             <p class="profil__add new">Добавить свой рецепт</p>
+            <div class="recepti" id="fav_recepts"></div>
         </div>
         <div class="main">
             <h2 class="podbor__title">Лучшие подборки</h2>
@@ -188,6 +189,61 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class='login-container'>
+        <form id="loginForm" onSubmit={handleLoginSubmit}>
+            <h2>Login</h2>
+            <div class="input-group">
+                <label for="login-email">Email</label>
+                <input
+                    type="text"
+                    id="login-email"
+                    name="login-email"
+                />
+            </div>
+            <div class="input-group">
+                <label for="login-password">Password</label>
+                <input
+                    type="password"
+                    id="login-password"
+                    name="login-password"
+                />
+            </div>
+            <button type="submit">Login</button>
+            <p id="login-errorMessage"></p>
+        </form>
+    </div>
+    <div class='login-container'>
+        <form id="signupForm">
+            <h2>Sign up</h2>
+            <div class="input-group">
+                <label for="signup-username">Username</label>
+                <input
+                    type="text"
+                    id="signup-username"
+                    name="signup-username"
+                />
+            </div>
+            <div class="input-group">
+                <label for="signup-email">Email</label>
+                <input
+                    type="text"
+                    id="signup-email"
+                    name="signup-email"
+                />
+            </div>
+            <div class="input-group">
+                <label for="signup-password">Password</label>
+                <input
+                    type="password"
+                    id="signup-password"
+                    name="signup-password"
+                />
+            </div>
+            <button type="submit">Sign Up</button>
+            <p id="signup-errorMessage"></p>
+        </form>
     </div>
 </body>
 </html>
