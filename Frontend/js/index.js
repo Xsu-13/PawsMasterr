@@ -9,21 +9,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let selectedIngredients = [];
 
-    // Получаем поле ввода для ингредиентов
     const ingredientsInput = document.querySelector('.ingridients .search__input');
 
-    // Добавляем обработчик события нажатия клавиши
     ingredientsInput.addEventListener('keydown', function (event) {
-        // Проверяем, была ли нажата клавиша Enter
         if (event.key === 'Enter') {
-            // Получаем значение из поля ввода
             const ingredient = ingredientsInput.value.trim();
-
-            // Проверяем, не пустое ли значение
             if (ingredient) {
                 selectedIngredients.push(ingredient);
-                console.log('Ингредиенты:', selectedIngredients); // Выводим в консоль
-                ingredientsInput.value = ''; // Очищаем поле ввода после вывода
+                console.log('Ингредиенты:', selectedIngredients);
+                ingredientsInput.value = '';
+
+                //ПРОВЕРИТЬ!!!!!!!!
+                CreateNewTag(ingredient);
             }
         }
     });

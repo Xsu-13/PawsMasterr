@@ -709,3 +709,23 @@ body {
   text-align: center;
   margin-top: 15px;
 }
+
+.tag{
+  padding: 5px;
+  max-width: 150px;
+  border-radius: 10px;
+  text-align: center;
+  background-color: cornflowerblue;
+  color: white;
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete_tag{
+  display: inline;
+  padding-left: 10px;
+  cursor: pointer;
+}
