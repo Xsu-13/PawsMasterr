@@ -50,24 +50,3 @@ function GoToProfile() {
     showRecipes(fav_recipes);
     document.querySelector('.profil').style.display = 'block';
 }
-
-
-function CreateNewTag(name) {
-    const tagDiv = document.createElement('div');
-    tagDiv.className = 'tag';
-
-    tagDiv.textContent = name;
-
-    const deleteTagDiv = document.createElement('div');
-    deleteTagDiv.className = 'delete_tag';
-    deleteTagDiv.textContent = 'X';
-
-    deleteTagDiv.addEventListener('click', function () {
-        tagDiv.remove();
-    });
-
-    tagDiv.appendChild(deleteTagDiv);
-
-    //ИСПРАВИТЬ НА ПРАВИЛЬНОЕ МЕСТОПОЛОЖЕНИЕ!
-    document.body.appendChild(tagDiv);
-}

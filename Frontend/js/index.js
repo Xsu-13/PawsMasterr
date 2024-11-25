@@ -1,5 +1,3 @@
-
-
 document.addEventListener("DOMContentLoaded", async () => {
 
     let user = await fetchGetUser('66e758ae205c94eb5142bb98');
@@ -20,7 +18,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ingredientsInput.value = '';
 
                 //ПРОВЕРИТЬ!!!!!!!!
-                CreateNewTag(ingredient);
+                const tagDiv = document.createElement('div');
+                tagDiv.className = 'tag';
+
+                tagDiv.textContent = ingredient;
+
+                const deleteTagDiv = document.createElement('div');
+                deleteTagDiv.className = 'delete_tag';
+                deleteTagDiv.textContent = '✖';
+
+                deleteTagDiv.addEventListener('click', function () {
+                    tagDiv.remove();
+                    const index = selectedIngredients.indexOf(ingredient);
+                    if (index > -1) {
+                        selectedIngredients.splice(index, 1);
+                    }
+                });
+
+                tagDiv.appendChild(deleteTagDiv);
+                let tag_root = document.getElementById('tags');
+
+                console.log(tag_root);
+
+                tag_root.appendChild(tagDiv);
             }
         }
     });
