@@ -33,7 +33,7 @@ namespace Cooking.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult<List<RecipeDto>>> Search([FromQuery] string? subtitle, [FromQuery] string[]? ingredients, [FromQuery] int? ingredientsCount, [FromQuery] int? servingsCount)
+        public async Task<ActionResult<List<RecipeDto>>> Search([FromQuery] string? subtitle, [FromQuery(Name = "ingredients")] string[]? ingredients, [FromQuery] int? ingredientsCount, [FromQuery] int? servingsCount)
         {
             List<RecipeDto> recipes = new();
 

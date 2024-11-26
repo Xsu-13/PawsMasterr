@@ -1,6 +1,6 @@
 axios.defaults.withCredentials = true;
 
-let domen = "https://localhost:55993";
+let domen = "https://localhost:54712";
 
 const fetchGetRecipes = async () => {
     try {
@@ -21,7 +21,8 @@ const fetchGetRecipesWithFilter = async (subtitle, ingredients, ingredientsCount
         params.append('subtitle', subtitle);
     }
     if (ingredients && ingredients.length > 0) {
-        params.append('ingredients', ingredients.join(','));
+        // Передаем ингредиенты как массив
+        ingredients.forEach(ingredient => params.append('ingredients', ingredient));
     }
     if (ingredientsCount) {
         params.append('ingredientsCount', ingredientsCount);

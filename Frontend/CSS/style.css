@@ -215,10 +215,6 @@ body {
   cursor: pointer;
 }
 
-.recepts__heart:hover{
-  background-color: #BBBBBB;
-}
-
 .recepts__ingridients {
   display: flex;
   justify-content: space-between;
@@ -502,6 +498,10 @@ body {
   fill: #36281C;
 }
 
+.recepts__heart.fav path {
+  fill: #36281C;
+}
+
 .add-form {
   display: flex;
   position: fixed;
@@ -579,11 +579,12 @@ body {
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
   color: #BBBBBB;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
   background-image: url(../images/paperclip.svg);
   background-repeat: no-repeat;
   padding-left: 30px;
-  background-position: center left;
+  background-position: top left;
+  margin-right: auto;
 }
 
 .add-form__right svg {
@@ -664,13 +665,38 @@ body {
   width: 60px;
 }
 
-.photo-preview {
-  border: 1px solid #ccc;
-  padding: 10px;
-  width: fit-content;
-  display: inline-block;
+.add-recipt-button {
+  width: 550px;
+  height: 50px;
+  padding: 16px 50px;
+  border-radius: 8px;
+  border: 1px solid black;
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21.09px;
+  text-align: center;
+  color: black;
+  cursor: pointer;
+  background-color: rgb(224, 222, 222);
+  margin-top: 30px;
 }
 
+.photo-preview {
+  border: 1px solid #ccc;
+  width: fit-content;
+  display: inline-block;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+#preview-image {
+  border-radius: 10px;
+}
+
+.photo-block {
+  display: flex;
+}
 
 .login-container {
   background-color: #fff;
@@ -685,7 +711,7 @@ body {
   opacity: 0; 
   transform: translate(-50%, -60%); 
   transition: opacity 0.5s ease, transform 0.5s ease; 
-  z-index: 100;
+  z-index: 0;
 }
 
 .login-container.show {
