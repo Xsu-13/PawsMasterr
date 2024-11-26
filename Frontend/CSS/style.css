@@ -494,12 +494,13 @@ body {
   background: #342619;
 }
 
-.profil .recepts__heart path {
-  fill: #36281C;
+.recepts__heart.fav {
+  fill:#342619;
 }
 
-.recepts__heart.fav path {
-  fill: #36281C;
+.recepts__heart{
+  width: 50px;
+  height: 50px;
 }
 
 .add-form {

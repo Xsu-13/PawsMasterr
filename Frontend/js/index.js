@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let selectedIngredients = [];
 
     let fav_ids = fav_recipes.map(recipe => recipe.id);
+    let current_page_is_favorite = true; 
     
 
     const ingredientsInput = document.querySelector('.ingridients .search__input');
@@ -63,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let recipes = await fetchGetRecipesWithFilter(subtitle = searchInput, ingredients = selectedIngredients, ingredientsCount = ingredientsCountInput, servingsCount = servingsCountInput);
 
-        showRecipes(recipes);
+        showRecipes(recipes, current_page_is_favorite);
     });
 
 
@@ -150,12 +151,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (fav_ids.includes(recipe.id)) {
                 iconsData.push({
-                    svg: '<svg class="recepts__heart fav" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 6.01136L15.9321 4.39979C12.2476 0.612646 5.49969 1.91996 3.06328 6.67809C1.91742 8.91588 1.65977 12.146 3.75001 16.2697C5.76313 20.2412 9.94804 24.9954 17.5 30.1757C25.052 24.9954 29.2369 20.2412 31.25 16.2697C33.3402 12.146 33.0826 8.91588 31.9367 6.67809C29.5003 1.91996 22.7524 0.612646 19.0679 4.39979L17.5 6.01136ZM17.5 32.8125C-16.0412 10.6496 7.17228 -6.6519 17.1157 2.50049C17.2461 2.62056 17.3743 2.74517 17.5 2.87438C17.6257 2.74518 17.7539 2.62057 17.8843 2.50051C27.8277 -6.65192 51.0412 10.6496 17.5 32.8125Z" fill="#36281C"/></svg>',
+                    svg: '<svg class="recepts__heart fav" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
                 })
             }
             else {
                 iconsData.push({
-                    svg: '<svg class="recepts__heart" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 6.01136L15.9321 4.39979C12.2476 0.612646 5.49969 1.91996 3.06328 6.67809C1.91742 8.91588 1.65977 12.146 3.75001 16.2697C5.76313 20.2412 9.94804 24.9954 17.5 30.1757C25.052 24.9954 29.2369 20.2412 31.25 16.2697C33.3402 12.146 33.0826 8.91588 31.9367 6.67809C29.5003 1.91996 22.7524 0.612646 19.0679 4.39979L17.5 6.01136ZM17.5 32.8125C-16.0412 10.6496 7.17228 -6.6519 17.1157 2.50049C17.2461 2.62056 17.3743 2.74517 17.5 2.87438C17.6257 2.74518 17.7539 2.62057 17.8843 2.50051C27.8277 -6.65192 51.0412 10.6496 17.5 32.8125Z" fill="#36281C"/></svg>',
+                    svg: '<svg class="recepts__heart" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
                 })
             }
 
@@ -305,7 +306,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     await fetchRemoveFromFavorites(user.id, recipt.id);
                     elem.classList.remove('fav');
                     fav_recipes = fav_recipes.filter(item => item.id !== recipt.id);
-                    showRecipes(fav_recipes);
+                    showRecipes(fav_recipes, current_page_is_favorite);
                 }
                 else {
                     await fetchAddToFavorites(user.id, recipt.id);
@@ -313,7 +314,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     let newFav = await fetchGetRecipeById(recipt.id);
                     fav_recipes.add(newFav);
-                    showRecipes(fav_recipes, isFavorite=true);
+                    showRecipes(fav_recipes, current_page_is_favorite);
                 }
 
             })
@@ -332,6 +333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.querySelector('.recepti').style.display = 'none';
             document.querySelector('.podborki').style.display = 'none';
             document.querySelector('.profil').style.display = 'none';
+            current_page_is_favorite = false;
 
             // Показываем нужный блок
             if (this.id === 'recepti') {
@@ -340,7 +342,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else if (this.id === 'podborki') {
                 document.querySelector('.podborki').style.display = 'block';
             } else if (this.id === 'profil') {
-                showRecipes(fav_recipes);
+                current_page_is_favorite = true;
+                showRecipes(fav_recipes, current_page_is_favorite);
                 document.querySelector('.profil').style.display = 'block';
             } else if (this.id === 'main') {
                 document.querySelector('.main').style.display = 'block';
