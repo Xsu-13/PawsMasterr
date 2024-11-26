@@ -41,7 +41,7 @@ namespace Backend.Services
         public async Task<List<RecipeDto>> GetRecipesByIngredientsAsync(string[] ingredients)
         {
             var filters = ingredients.Select(ingredient =>
-                Builders<Recipe>.Filter.ElemMatch(r => r.ingredients, i => i.name == ingredient)
+                Builders<Recipe>.Filter.ElemMatch(r => r.ingredients, i => i.name.ToLower() == ingredient.ToLower())
             );
 
             var filter = Builders<Recipe>.Filter.Or(filters);

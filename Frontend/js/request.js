@@ -1,6 +1,6 @@
 axios.defaults.withCredentials = true;
 
-let domen = "https://localhost:58169";
+let domen = "https://localhost:55993";
 
 const fetchGetRecipes = async () => {
     try {

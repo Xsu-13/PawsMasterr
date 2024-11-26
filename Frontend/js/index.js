@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log('Ингредиенты:', selectedIngredients);
                 ingredientsInput.value = '';
 
-                //ПРОВЕРИТЬ!!!!!!!!
                 const tagDiv = document.createElement('div');
                 tagDiv.className = 'tag';
 
@@ -49,7 +48,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Добавляем обработчик события клика
     filterButton.addEventListener('click', async function () {
-        // Получаем значения из полей ввода
         const searchInput = document.querySelector('.search__input').value;
         const ingredientsCountInput = document.querySelector('.filters__block input:nth-child(1)').value;
         const servingsCountInput = document.querySelector('.filters__block input:nth-child(2)').value;
@@ -77,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    var showRecipes = async (recipesParam) => {
+    var showRecipes = async (recipesParam, isFavorite = false) => {
 
         clearRecipes();
 
@@ -87,6 +85,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         else {
             recipes = recipesParam;
         }
+
+        console.log(recipes)
 
         //ПОТОМ ИЗМЕНИТЬ!
         if (recipes.length > 20)
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             descriptionInstructionContainer.appendChild(instructionsContainer);
 
             // Добавляем секцию на страницу (например, в body)
-            if (recipesParam != null) {
+            if (isFavorite == true) {
                 let elem = document.getElementById("fav_recepts");
                 elem.appendChild(section);
             }
@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     let newFav = await fetchGetRecipeById(recipt.id);
                     fav_recipes.add(newFav);
-                    showRecipes(fav_recipes);
+                    showRecipes(fav_recipes, isFavorite=true);
                 }
 
             })
