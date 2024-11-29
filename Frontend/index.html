@@ -16,6 +16,8 @@
     <script defer src="./js/helper.js"></script>
 </head>
 <body>
+    <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+    <audio id="moveSound" src="move.mp3" preload="auto"></audio>
     <img src="images/лапки_1.png" alt="" class="lapki_left">
     <img src="images/лапки_2.png" alt="" class="lapki_right">
     <header class="header">
@@ -56,11 +58,11 @@
                     </div>
                 </div>
                 <div class="tags" id="tags"></div>
-                <button class="podbor__button btn-reset">Показать</button>
+                <button class="podbor__button btn-hover btn-reset">Показать</button>
             </section>
             <section class="new-recept">
                 <div class="new-recept__text">Не нашли рецепт? Добавьте сами!</div>
-                <div class="new-recept__button new btn-reset">Добавить</div>
+                <div class="new-recept__button btn-hover new btn-reset">Добавить</div>
             </section>
         </div>
         <div class="podborki">
@@ -112,8 +114,8 @@
                 <div class="main__block">
                     <a href="#" class="main__title">Вы можете добавить свой рецепт</a>
                     <div class="main__buttons">
-                        <button class="main__btn-add new btn-reset">Добавить</button>
-                        <button class="main__btn-registration btn-reset">Зарегистрироваться</button>
+                        <button class="main__btn-add btn-hover-2 new btn-reset">Добавить</button>
+                        <button class="main__btn-registration btn-hover btn-reset">Зарегистрироваться</button>
                     </div>
                 </div>
             </div>
@@ -141,8 +143,8 @@
                 <div class="main__block">
                     <a href="#" class="main__title">Вы можете добавить свой рецепт</a>
                     <div class="main__buttons">
-                        <button class="main__btn-add new btn-reset">Добавить</button>
-                        <button class="main__btn-registration btn-reset">Зарегистрироваться</button>
+                        <button class="main__btn-add new btn-hover-2 btn-reset">Добавить</button>
+                        <button class="main__btn-registration btn-hover btn-reset">Зарегистрироваться</button>
                     </div>
                 </div>
             </div>
@@ -183,8 +185,8 @@
             <textarea name="" type="text" class="add-form__descr add-form__input" id="recipt_input_description" placeholder="Описание"></textarea>
             <p class="add-form__instruction">Инструкция по приготовлению</p>
             <textarea name="" type="text" class="add-form__descr-cook add-form__input" id="recipt_input_steps" placeholder="Описание этапов приготовления"></textarea>
-            <button class="add-recipt-button" id="add-recipt-button" type="submit">Добавить</button>
-        </div>
+            <button class="add-recipt-button btn-hover-2" id="add-recipt-button" type="submit">Добавить</button>
+        </div>  
         <div class="add-form__right">
             <p class="add-form__name">Ингридиенты</p>
             <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
