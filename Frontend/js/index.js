@@ -82,6 +82,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     var showRecipes = async (recipesParam, isFavorite = false) => {
 
         clearRecipes();
+        fav_recipes = await fetchGetFavoriteRecipes('66e758ae205c94eb5142bb98');
+        fav_ids = fav_recipes.map(recipe => recipe.id);
 
         if (recipesParam == null) {
             recipes = (await fetchGetRecipes()).data;
@@ -306,15 +308,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                     await fetchRemoveFromFavorites(user.id, recipt.id);
                     elem.classList.remove('fav');
                     fav_recipes = fav_recipes.filter(item => item.id !== recipt.id);
-                    showRecipes(fav_recipes, current_page_is_favorite);
+                    if(current_page_is_favorite == true)
+                    {
+                        showRecipes(fav_recipes, current_page_is_favorite);
+                    }
                 }
                 else {
                     await fetchAddToFavorites(user.id, recipt.id);
                     elem.classList.add('fav');
 
                     let newFav = await fetchGetRecipeById(recipt.id);
-                    fav_recipes.add(newFav);
-                    showRecipes(fav_recipes, current_page_is_favorite);
+                    fav_recipes.push(newFav);
+                    // showRecipes(fav_recipes, current_page_is_favorite);
                 }
 
             })
@@ -327,13 +332,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelector('.profil').style.display = 'none';
 
     document.querySelectorAll('.header__link').forEach(link => {
-        link.addEventListener('click', function () {
+        link.addEventListener('click', async function () {
             // Скрываем все блоки
             document.querySelector('.main').style.display = 'none';
             document.querySelector('.recepti').style.display = 'none';
             document.querySelector('.podborki').style.display = 'none';
             document.querySelector('.profil').style.display = 'none';
             current_page_is_favorite = false;
+            recipes = (await fetchGetRecipes()).data;
 
             // Показываем нужный блок
             if (this.id === 'recepti') {
@@ -346,6 +352,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 showRecipes(fav_recipes, current_page_is_favorite);
                 document.querySelector('.profil').style.display = 'block';
             } else if (this.id === 'main') {
+                showRecipes(recipes, current_page_is_favorite);
                 document.querySelector('.main').style.display = 'block';
             }
         });
