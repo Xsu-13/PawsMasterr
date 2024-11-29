@@ -456,12 +456,15 @@ body {
 
 .main__img {
   width: 40%;
+  border-radius: 18px;
+  outline: 1px solid black;
 }
 
 .main__buttons {
   margin-top: auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 15px;
 }
 
@@ -742,7 +745,7 @@ body {
   max-width: 150px;
   border-radius: 10px;
   text-align: center;
-  background-color: cornflowerblue;
+  background-color: #342619;
   color: white;
   margin: 10px;
   display: flex;
