@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
     const addRecipeButton = document.getElementById('add-recipt-button');
+    const addRecipeForm = document.getElementById('add-form')
 
     addRecipeButton.addEventListener('click', async function () {
 
@@ -38,6 +39,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetchPostRecipe(recipe_data);
 
         await fetchUploadRecipeImage(response.data.id, recipe_file);
+
+        addRecipeForm.style.display = 'none';
     });
 });
 
