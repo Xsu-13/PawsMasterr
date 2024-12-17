@@ -91,6 +91,18 @@ body {
   color: brown; 
 }
 
+.header__svg1:hover {
+  cursor: pointer;
+}
+
+.header__svg1:hover path:not(:first-child){
+  fill: red;
+}
+
+.header__svg1.active path:first-child {
+  fill: red;
+}
+
 .lapki_left {
   position: absolute;
   left: 30px;

@@ -53,3 +53,37 @@ function GoToProfile() {
     showRecipes(fav_recipes);
     document.querySelector('.profil').style.display = 'block';
 }
+
+
+const clickSound = document.getElementById('clickSound');
+const moveSound = document.getElementById('moveSound');
+const button = document.querySelector('.header__svg1');
+let soundsEnabled = true; // Переменная для отслеживания состояния звуков
+
+// Воспроизведение звука при клике
+document.addEventListener('click', () => {
+    if (soundsEnabled) {
+        clickSound.currentTime = 0; // Сброс времени воспроизведения
+        clickSound.play();
+    }
+});
+
+// Воспроизведение звука при движении мыши
+document.addEventListener('mousemove', () => {
+    if (soundsEnabled) {
+        moveSound.play();
+    }
+});
+
+// Обработка клика по кнопке
+button.addEventListener('click', () => {
+    soundsEnabled = !soundsEnabled; // Переключение состояния звуков
+
+    if (soundsEnabled) {
+        // Если звуки включены, убираем стили
+        button.classList.remove('active');
+    } else {
+        // Если звуки выключены, применяем стили
+        button.classList.add('active');
+    }
+});
