@@ -9,6 +9,8 @@ namespace Backend.Configurations
         {
             CreateMap<Recipe, RecipeDto>();
             CreateMap<RecipeDto, Recipe>();
+            CreateMap<SelectionDto, Selection>();
+            CreateMap<Selection, SelectionDto>();
         }
     }
 }

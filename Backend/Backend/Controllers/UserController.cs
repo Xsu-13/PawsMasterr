@@ -75,6 +75,13 @@ namespace Backend.Controllers
             return Ok(favoriteRecipes);
         }
 
+        [HttpGet("addedRecipes")]
+        public async Task<IActionResult> GetAddedRecipes(string userId)
+        {
+            var favoriteRecipes = await _favoriteRecipeService.GetAddedRecipesAsync(userId);
+            return Ok(favoriteRecipes);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUser(string userId)
         {

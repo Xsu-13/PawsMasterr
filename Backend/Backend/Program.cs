@@ -20,6 +20,7 @@ services.AddSingleton<PasswordHasher>();
 services.AddScoped<RecipeService>();
 services.AddScoped<UserService>();
 services.AddScoped<FavoriteRecipeService>();
+services.AddScoped<SelectionService>();
 
 //services.AddControllersWithViews();
 services.AddControllers();

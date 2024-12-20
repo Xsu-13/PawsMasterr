@@ -3,6 +3,7 @@ using Backend.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -11,6 +12,7 @@ namespace Backend.Services
     public class RecipeService
     {
         private readonly IMongoCollection<Recipe> _recipes;
+        private readonly IMongoCollection<User> _users;
         private readonly IMapper _mapper;
 
         public RecipeService(IOptions<MongoDBSettings> settings, IMapper mapper)
@@ -18,6 +20,7 @@ namespace Backend.Services
             MongoClient client = new MongoClient(settings.Value.ConnectionURI);
             IMongoDatabase database = client.GetDatabase(settings.Value.DatabaseName);
             _recipes = database.GetCollection<Recipe>(settings.Value.RecipesCollection);
+            _users = database.GetCollection<User>(settings.Value.UsersCollection);
             _mapper = mapper;
         }
 
@@ -68,6 +71,14 @@ namespace Backend.Services
             var recipe = _mapper.Map<Recipe>(recipeDto);
             await _recipes.InsertOneAsync(recipe);
         }
+        public async Task CreateRecipeFromUserAsync(string userId, RecipeDto recipeDto)
+        {
+            var recipe = _mapper.Map<Recipe>(recipeDto);
+            await _recipes.InsertOneAsync(recipe);
+
+            var update = Builders<User>.Update.AddToSet(u => u.AddedRecipes, recipe.id);
+            await _users.UpdateOneAsync(u => u.Id == userId, update);
+        }
 
         public async Task UpdateRecipeAsync(string id, RecipeDto recipeDto)
         {
@@ -78,6 +89,14 @@ namespace Backend.Services
         public async Task DeleteRecipeAsync(string id)
         {
             await _recipes.DeleteOneAsync(r => r.id.ToString() == id);
+        }
+
+        public async Task DeleteRecipeFromUserAsync(string userId, string recipeId)
+        {
+            var update = Builders<User>.Update.Pull("AddedRecipes", ObjectId.Parse(recipeId));
+            await _users.UpdateOneAsync(u => u.Id == userId, update);
+
+            await _recipes.DeleteOneAsync(r => r.id.ToString() == recipeId);
         }
 
         public async Task UpdateRecipeImageAsync(string recipeId, string imageUrl)

@@ -1,71 +1,18 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    var selectionId = getQueryParams().type
 
-    let user = await fetchGetUser('66e758ae205c94eb5142bb98');
-    let fav_recipes = await fetchGetFavoriteRecipes('66e758ae205c94eb5142bb98');
-    let userName = document.getElementById("profil__name");
-    userName.innerHTML = user.userName;
+    let collection = await fetchGetRecipesBySelectionId(selectionId);
 
-    let selectedIngredients = [];
+    let recipesPromises = collection.recipes.map(r => fetchGetRecipeById(r));
+    let recipes = await Promise.all(recipesPromises);
+    
 
-    let fav_ids = fav_recipes.map(recipe => recipe.id);
-    let current_page_is_favorite = true; 
-
-    const ingredientsInput = document.querySelector('.ingridients .search__input');
-
-    ingredientsInput.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter') {
-            const ingredient = ingredientsInput.value.trim();
-            if (ingredient) {
-                selectedIngredients.push(ingredient);
-                console.log('Ингредиенты:', selectedIngredients);
-                ingredientsInput.value = '';
-
-                const tagDiv = document.createElement('div');
-                tagDiv.className = 'tag';
-
-                tagDiv.textContent = ingredient;
-
-                const deleteTagDiv = document.createElement('div');
-                deleteTagDiv.className = 'delete_tag';
-                deleteTagDiv.textContent = '✖';
-
-                deleteTagDiv.addEventListener('click', function () {
-                    tagDiv.remove();
-                    const index = selectedIngredients.indexOf(ingredient);
-                    if (index > -1) {
-                        selectedIngredients.splice(index, 1);
-                    }
-                });
-
-                tagDiv.appendChild(deleteTagDiv);
-                let tag_root = document.getElementById('tags');
-
-                console.log(tag_root);
-
-                tag_root.appendChild(tagDiv);
-            }
-        }
-    });
-
-    const filterButton = document.querySelector('.podbor__button');
-
-    // Добавляем обработчик события клика
-    filterButton.addEventListener('click', async function () {
-        const searchInput = document.querySelector('.search__input').value;
-        const ingredientsCountInput = document.querySelector('.filters__block input:nth-child(1)').value;
-        const servingsCountInput = document.querySelector('.filters__block input:nth-child(2)').value;
-
-        // Выводим значения в консоль (или выполняем другие действия)
-        console.log('Поиск:', searchInput);
-        console.log('Ингредиенты:', selectedIngredients);
-        console.log('Количество ингредиентов:', ingredientsCountInput);
-        console.log('Число персон:', servingsCountInput);
-
-        let recipes = await fetchGetRecipesWithFilter(subtitle = searchInput, ingredients = selectedIngredients, ingredientsCount = ingredientsCountInput, servingsCount = servingsCountInput);
-
-        showRecipes(recipes, current_page_is_favorite);
-    });
-
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            type: params.get('id')
+        };
+    }
 
     var clearRecipes = () => {
         var recipesElements = document.getElementsByClassName("recepts");
@@ -77,23 +24,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
     }
-
+    
     var showRecipes = async (recipesParam, isFavorite = false) => {
 
         clearRecipes();
         fav_recipes = await fetchGetFavoriteRecipes('66e758ae205c94eb5142bb98');
         added_recipes = await fetchGetAddedRecipes('66e758ae205c94eb5142bb98');
+
         fav_ids = fav_recipes.map(recipe => recipe.id);
         added_ids = added_recipes.map(recipe => recipe.id);
-
-        if (recipesParam == null) {
-            recipes = (await fetchGetRecipes()).data;
-        }
-        else {
-            recipes = recipesParam;
-        }
-
-        console.log(recipes)
+        recipes = recipesParam;
 
         //ПОТОМ ИЗМЕНИТЬ!
         if (recipes.length > 20)
@@ -109,7 +49,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             {
                 section.className = 'recepts added';
             }
-    
 
             // Создаем заголовок рецепта
             const header = document.createElement('div');
@@ -326,110 +265,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     let newFav = await fetchGetRecipeById(recipt.id);
                     fav_recipes.push(newFav);
+                    // showRecipes(fav_recipes, current_page_is_favorite);
                 }
-
-            })
-        })
-
-        let recipsToRemove = document.getElementsByClassName("recepts__remove");
-
-        [...recipsToRemove].forEach((elem) => {
-            elem.addEventListener('click', async function () {
-
-                // let recipt = elem.closest('.recepts');
-                // if (elem.classList.contains('fav')) {
-                //     await fetchRemoveFromFavorites(user.id, recipt.id);
-                //     elem.classList.remove('fav');
-                //     fav_recipes = fav_recipes.filter(item => item.id !== recipt.id);
-                //     if(current_page_is_favorite == true)
-                //     {
-                //         showRecipes(fav_recipes, current_page_is_favorite);
-                //     }
-                // }
-                // else {
-                //     await fetchAddToFavorites(user.id, recipt.id);
-                //     elem.classList.add('fav');
-
-                //     let newFav = await fetchGetRecipeById(recipt.id);
-                //     fav_recipes.push(newFav);
-                // }
 
             })
         })
     };
 
-    document.querySelector('.main').style.display = 'block';
-    document.querySelector('.recepti').style.display = 'none';
-    document.querySelector('.podborki').style.display = 'none';
-    document.querySelector('.profil').style.display = 'none';
 
-    document.querySelectorAll('.header__link').forEach(link => {
-        link.addEventListener('click', async function () {
-            // Скрываем все блоки
-            document.querySelector('.main').style.display = 'none';
-            document.querySelector('.recepti').style.display = 'none';
-            document.querySelector('.podborki').style.display = 'none';
-            document.querySelector('.profil').style.display = 'none';
-            current_page_is_favorite = false;
-            recipes = (await fetchGetRecipes()).data;
-
-            // Показываем нужный блок
-            if (this.id === 'recepti') {
-                showRecipes();
-                document.querySelector('.recepti').style.display = 'block';
-            } else if (this.id === 'podborki') {
-                document.querySelector('.podborki').style.display = 'block';
-            } else if (this.id === 'profil') {
-                current_page_is_favorite = true;
-                showRecipes(fav_recipes, current_page_is_favorite);
-                document.querySelector('.profil').style.display = 'block';
-            } else if (this.id === 'main') {
-                showRecipes(recipes, current_page_is_favorite);
-                document.querySelector('.main').style.display = 'block';
-            }
-        });
-    });
-
-    const form = document.querySelector('.add-form');
-    document.querySelectorAll('.new').forEach(button => {
-        button.addEventListener('click', () => {
-            form.classList.add('show');
-        });
-    });
-    const closeButton = document.querySelector('.add-form__right svg');
-    closeButton.addEventListener('click', () => {
-        form.classList.remove('show');
-    })
-
-    document.querySelector('.add-form__add-photo').addEventListener('click', (event) => {
-        event.preventDefault();
-        document.getElementById('file-input').click();
-    });
-
-    document.getElementById('file-input').addEventListener('change', (event) => {
-        const file = event.target.files[0];
-
-        if (file) {
-            // Проверка типа файла
-            if (!file.type.startsWith('image/')) {
-                alert('Пожалуйста, выберите файл изображения.');
-                return;
-            }
-
-            // Создание URL для файла и отображение его в <img>
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const previewImage = document.getElementById('preview-image');
-                previewImage.src = e.target.result;
-                previewImage.style.display = 'block';
-            };
-            reader.readAsDataURL(file); // Преобразование файла в DataURL
-        }
-    });
-
-    async function RemoveRecipt(userId, reciptId)
-    {
-        await fetchRemoveRecipe(userId, reciptId);
-    }
-});
-
+    showRecipes(recipes, false);
+})

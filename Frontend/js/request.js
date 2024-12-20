@@ -1,6 +1,6 @@
 axios.defaults.withCredentials = true;
 
-let domen = "https://localhost:50904";
+let domen = "https://localhost:50285";
 
 const fetchGetRecipes = async () => {
     try {
@@ -61,6 +61,16 @@ const fetchGetFavoriteRecipes = async (userId) => {
     }
 }
 
+const fetchGetAddedRecipes = async (userId) => {
+    try {
+        let response = await axios.get(domen + `/api/User/addedRecipes?userId=${userId}`)
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
 const fetchGetUser = async (userId) => {
     try {
         let response = await axios.get(domen + `/api/User?userId=${userId}`)
@@ -74,6 +84,26 @@ const fetchGetUser = async (userId) => {
 const fetchAddToFavorites = async (userId, recipeId) => {
     try {
         let response = await axios.post(domen + `/api/User/${recipeId}?userId=${userId}`)
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
+const fetchAddRecipe = async (userId, recipe) => {
+    try {
+        let response = await axios.post(domen + `/api/User/userId/${userId}`, recipe)
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
+const fetchRemoveRecipe = async (userId, recipeId) => {
+    try {
+        let response = await axios.post(domen + `/api/User/userId/${userId}/recipe/${recipeId}`)
         return response.data;
     }
     catch (e) {
@@ -112,6 +142,16 @@ const fetchPutRecipe = async (recipeId, recipe) => {
 const fetchGetRecipeById = async (recipeId) => {
     try {
         let response = await axios.get(domen + `/api/Recipes/${recipeId}`)
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
+const fetchGetRecipesBySelectionId = async (selectionId) => {
+    try {
+        let response = await axios.get(domen + `/api/Recipes/selection/${selectionId}`)
         return response.data;
     }
     catch (e) {

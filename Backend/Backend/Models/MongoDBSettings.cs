@@ -8,5 +8,6 @@
 
         public string RecipesCollection { get; set; } = null!;
         public string UsersCollection { get; set; } = null!;
+        public string SelectionCollection { get; set; } = null!;
     }
 }

@@ -12,10 +12,13 @@ namespace Cooking.Controllers
     public class RecipesController : ControllerBase
     {
         private readonly RecipeService _recipeService;
+        private readonly SelectionService _selectionService;
 
-        public RecipesController(RecipeService recipeService)
+        public RecipesController(RecipeService recipeService,
+            SelectionService selectionService)
         {
             _recipeService = recipeService;
+            _selectionService = selectionService;
         }
 
         [HttpGet]
@@ -81,6 +84,14 @@ namespace Cooking.Controllers
             return CreatedAtAction(nameof(Get), new { id = recipe.Id }, recipe);
         }
 
+        [HttpPost("user/{userId}")]
+        public async Task<ActionResult> CreateByUser(string userId, RecipeDto recipe)
+        {
+            recipe.Id = ObjectId.GenerateNewId().ToString();
+            await _recipeService.CreateRecipeFromUserAsync(userId, recipe);
+            return CreatedAtAction(nameof(Get), new { id = recipe.Id }, recipe);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, RecipeDto recipe)
         {
@@ -102,6 +113,18 @@ namespace Cooking.Controllers
                 return NotFound();
             }
             await _recipeService.DeleteRecipeAsync(id);
+            return NoContent();
+        }
+
+        [HttpDelete("user/{userId}/recipe/{id}")]
+        public async Task<IActionResult> DeleteByUser(string userId, string id)
+        {
+            var recipe = await _recipeService.GetRecipeAsync(id);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+            await _recipeService.DeleteRecipeFromUserAsync(userId, id);
             return NoContent();
         }
 
@@ -145,6 +168,17 @@ namespace Cooking.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("selection/{id}")]
+        public async Task<ActionResult<SelectionDto>> GetBySelectionId(string id)
+        {
+            var selection = await _selectionService.GetRecipes(id);
+            if (selection == null)
+            {
+                return NotFound();
+            }
+            return selection;
         }
     }
 }
