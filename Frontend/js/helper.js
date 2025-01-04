@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
     const addRecipeButton = document.getElementById('add-recipt-button');
-    const addRecipeForm = document.getElementById('add-form')
+    const addRecipeForm = document.getElementById('add-form');
+    let user = await fetchGetUser('66e758ae205c94eb5142bb98');
 
     addRecipeButton.addEventListener('click', async function () {
 
@@ -36,9 +37,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             description: recipe_description
         };
 
-        const response = await fetchPostRecipe(recipe_data);
-
-        await fetchUploadRecipeImage(response.data.id, recipe_file);
+        const response = await fetchAddRecipe(user.id, recipe_data);
+        await fetchUploadRecipeImage(response.id, recipe_file);
+        await fetchAddToFavorites(user.id, response.id);
 
         addRecipeForm.style.display = 'none';
     });

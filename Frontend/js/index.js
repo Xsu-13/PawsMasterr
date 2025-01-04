@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let selectedIngredients = [];
 
     let fav_ids = fav_recipes.map(recipe => recipe.id);
-    let current_page_is_favorite = true; 
+    let current_page_is_favorite = true;
 
     const ingredientsInput = document.querySelector('.ingridients .search__input');
 
@@ -93,23 +93,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             recipes = recipesParam;
         }
 
-        console.log(recipes)
-
         //ПОТОМ ИЗМЕНИТЬ!
         if (recipes.length > 20)
             recipes = recipes.slice(0, 20);
 
+        console.log(added_ids)
         recipes.forEach(recipe => {
             // Создаем секцию рецептов
             const section = document.createElement('section');
             section.className = 'recepts';
             section.id = recipe.id;
 
-            if (added_ids.includes(recipe.id))
-            {
+
+            if (added_ids.includes(recipe.id)) {
                 section.className = 'recepts added';
             }
-    
+
 
             // Создаем заголовок рецепта
             const header = document.createElement('div');
@@ -169,6 +168,33 @@ document.addEventListener("DOMContentLoaded", async () => {
                 })
             }
 
+            if (added_ids.includes(recipe.id)) {
+                const button = document.createElement('button');
+                button.classList.add('recepts__remove');
+                // button.setAttribute('onclick', `deleteRecipe('${recipeId}')`);
+
+                // Создаем SVG
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('width', '24');
+                svg.setAttribute('height', '24');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.setAttribute('fill', 'none');
+
+                // Создаем path для SVG
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', 'M6 6L18 18M6 18L18 6');
+                path.setAttribute('stroke', 'red');
+                path.setAttribute('stroke-width', '2');
+                path.setAttribute('stroke-linecap', 'round');
+                path.setAttribute('stroke-linejoin', 'round');
+
+                // Добавляем path в SVG
+                svg.appendChild(path);
+
+                // Добавляем SVG в кнопку
+                button.appendChild(svg);
+                iconsContainer.appendChild(button);
+            }
             // Добавляем иконки в контейнер
             iconsData.forEach(icon => {
                 iconsContainer.appendChild(createIcon(icon.svg, icon.text));
@@ -315,8 +341,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     await fetchRemoveFromFavorites(user.id, recipt.id);
                     elem.classList.remove('fav');
                     fav_recipes = fav_recipes.filter(item => item.id !== recipt.id);
-                    if(current_page_is_favorite == true)
-                    {
+                    if (current_page_is_favorite == true) {
                         showRecipes(fav_recipes, current_page_is_favorite);
                     }
                 }
@@ -335,25 +360,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         [...recipsToRemove].forEach((elem) => {
             elem.addEventListener('click', async function () {
-
-                // let recipt = elem.closest('.recepts');
-                // if (elem.classList.contains('fav')) {
-                //     await fetchRemoveFromFavorites(user.id, recipt.id);
-                //     elem.classList.remove('fav');
-                //     fav_recipes = fav_recipes.filter(item => item.id !== recipt.id);
-                //     if(current_page_is_favorite == true)
-                //     {
-                //         showRecipes(fav_recipes, current_page_is_favorite);
-                //     }
-                // }
-                // else {
-                //     await fetchAddToFavorites(user.id, recipt.id);
-                //     elem.classList.add('fav');
-
-                //     let newFav = await fetchGetRecipeById(recipt.id);
-                //     fav_recipes.push(newFav);
-                // }
-
+                let recipt = elem.closest('.recepts');
+                if (recipt.classList.contains('added')) {
+                    await RemoveRecipt(user.id, recipt.id);
+                    fav_recipes = fav_recipes.filter(item => item.id !== recipt.id);
+                    if (current_page_is_favorite == true) {
+                        showRecipes(fav_recipes, current_page_is_favorite);
+                    }
+                    else{
+                        filterButton.click()
+                    }
+                }
             })
         })
     };
@@ -427,9 +444,97 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    async function RemoveRecipt(userId, reciptId)
-    {
+    async function RemoveRecipt(userId, reciptId) {
         await fetchRemoveRecipe(userId, reciptId);
+    }
+    const addRecipeButton = document.getElementById('add-recipt-button');
+    const addRecipeForm = document.getElementById('add-form');
+
+    addRecipeButton.addEventListener('click', async function () {
+
+        const recipe_name = document.getElementById('recipt_input_name').value;
+        const recipe_prep_time = document.getElementById('recipt_input_preparation_time').value;
+        const recipe_cooking_time = document.getElementById('recipt_input_cooking_time').value;
+        const recipe_serving = parseInt(document.getElementById('recipt_input_serving').value, 10);
+
+        const recipe_file = document.getElementById('file-input').files[0];
+        const recipe_description = document.getElementById('recipt_input_description').value;
+        const recipe_steps = document.getElementById('recipt_input_steps').value.split('\n').filter(step => step.trim() !== '');
+
+        const recipe_ingredients_elements = document.getElementsByClassName('add-form__block-product-input');
+        const recipe_ingredients_count_elements = document.getElementsByClassName('add-form__block-count-input');
+
+        let recipe_ingredients = [];
+        for (let i = 0; i < recipe_ingredients_elements.length; i++) {
+            const ingredient_name = recipe_ingredients_elements[i].value.trim();
+            const ingredient_quantity = recipe_ingredients_count_elements[i].value.trim();
+            if (ingredient_name && ingredient_quantity) {
+                recipe_ingredients.push({ name: ingredient_name, quantity: ingredient_quantity });
+            }
+        }
+
+        const recipe_data = {
+            title: recipe_name,
+            ingredients: recipe_ingredients,
+            steps: recipe_steps,
+            servings: recipe_serving,
+            prep_time: recipe_prep_time,
+            cook_time: recipe_cooking_time,
+            description: recipe_description
+        };
+
+        const response = await fetchAddRecipe(user.id, recipe_data);
+        await fetchUploadRecipeImage(response.id, recipe_file);
+        await fetchAddToFavorites(user.id, response.id);
+
+        fav_ids.push(response.id);
+        fav_recipes = await fetchGetFavoriteRecipes('66e758ae205c94eb5142bb98');
+        showRecipes(fav_recipes, current_page_is_favorite);
+
+        addRecipeForm.style.display = 'none';
+    });
+});
+
+function GoToProfile() {
+    document.querySelector('.main').style.display = 'none';
+    document.querySelector('.recepti').style.display = 'none';
+    document.querySelector('.podborki').style.display = 'none';
+    document.querySelector('.profil').style.display = 'none';
+
+    showRecipes(fav_recipes);
+    document.querySelector('.profil').style.display = 'block';
+}
+
+
+const clickSound = document.getElementById('clickSound');
+const moveSound = document.getElementById('moveSound');
+const button = document.querySelector('.header__svg1');
+let soundsEnabled = true; // Переменная для отслеживания состояния звуков
+
+// Воспроизведение звука при клике
+document.addEventListener('click', () => {
+    if (soundsEnabled) {
+        clickSound.currentTime = 0; // Сброс времени воспроизведения
+        clickSound.play();
     }
 });
 
+// Воспроизведение звука при движении мыши
+document.addEventListener('mousemove', () => {
+    if (soundsEnabled) {
+        moveSound.play();
+    }
+});
+
+// Обработка клика по кнопке
+button.addEventListener('click', () => {
+    soundsEnabled = !soundsEnabled; // Переключение состояния звуков
+
+    if (soundsEnabled) {
+        // Если звуки включены, убираем стили
+        button.classList.remove('active');
+    } else {
+        // Если звуки выключены, применяем стили
+        button.classList.add('active');
+    }
+});
