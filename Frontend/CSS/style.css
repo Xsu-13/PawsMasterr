@@ -246,6 +246,7 @@ body {
   line-height: 25px;
   text-align: left;
   color: black;
+  position: relative;
 }
 
 .recepts__icons-item {
@@ -809,4 +810,21 @@ body {
 .tags{
   display: flex;
   flex-direction: row;
+}
+
+.recepts__remove {
+  border: 1px solid black;
+  border-radius: 100px;
+  padding: 5px 10px;
+  background-color: transparent;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  transition: all 0.3s linear;
+}
+
+.recepts__remove:hover {
+  background-color: rgba(163, 3, 3, 0.5);
+  cursor: pointer;
+  box-shadow: 0 0 5px 5px rgba(255, 0, 0, 0.189);
 }
