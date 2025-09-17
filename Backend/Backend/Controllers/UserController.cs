@@ -90,22 +90,16 @@ namespace Backend.Controllers
         }
 
         [HttpPost("{userId}/upload-image")]
-        public async Task<IActionResult> UploadRecipeImage(string userId, IFormFile image)
+        public async Task<IActionResult> UploadRecipeImage(string userId, IFormFile image,
+            [FromServices] Backend.Services.IImageStorageService imageStorage)
         {
             if (image == null || image.Length == 0)
             {
                 return BadRequest("Invalid image file.");
             }
 
-            var fileName = $"{Guid.NewGuid()}_{image.FileName}";
-            var filePath = Path.Combine("wwwroot", "images", "users", fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await image.CopyToAsync(stream);
-            }
-
-            var imageUrl = $"/images/users/{fileName}";
+            using var stream = image.OpenReadStream();
+            var imageUrl = await imageStorage.UploadAsync(stream, image.ContentType, image.FileName, "users");
 
             await _userService.UpdateRecipeImageAsync(userId, imageUrl);
 
