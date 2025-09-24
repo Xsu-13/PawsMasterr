@@ -28,33 +28,16 @@ set YDB_AUTH_TOKEN=your_ydb_token_here
 
 ## Схема базы данных
 
-Выполните SQL-скрипт `Database/init.sql` в YDB консоли:
+Выполните SQL-скрипт `Database/init_table_api.sql` в YDB консоли для создания таблиц:
 
-```sql
-CREATE TABLE users (
-    id Utf8,
-    data Json,
-    created_at Timestamp,
-    updated_at Timestamp,
-    PRIMARY KEY (id)
-);
+- **users** - пользователи с отдельными полями
+- **recipes** - рецепты с отдельными полями  
+- **recipe_ingredients** - ингредиенты рецептов
+- **recipe_steps** - шаги приготовления
+- **user_favorite_recipes** - избранные рецепты пользователей
+- **selections** - подборки рецептов
 
-CREATE TABLE recipes (
-    id Utf8,
-    data Json,
-    created_at Timestamp,
-    updated_at Timestamp,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE selections (
-    id Utf8,
-    data Json,
-    created_at Timestamp,
-    updated_at Timestamp,
-    PRIMARY KEY (id)
-);
-```
+Используется Table API с типизированными колонками для лучшей производительности.
 
 ## Архитектура
 
@@ -71,12 +54,12 @@ CREATE TABLE selections (
 - **FavoriteRecipeService** - избранные рецепты
 - **SelectionService** - подборки
 
-## Особенности Document API
+## Особенности Table API
 
-1. **JSON-документы** - все данные хранятся как JSON в поле `data`
-2. **Вложенные коллекции** - ингредиенты, шаги, избранное хранятся внутри документов
-3. **Гибкая схема** - легко добавлять новые поля без миграций
-4. **Простой поиск** - базовая фильтрация, для сложных запросов нужны YQL-функции
+1. **Типизированные столбцы** - каждое поле имеет строгий тип (Utf8, Int32, Timestamp, etc.)
+2. **Нормализованная структура** - ингредиенты и шаги в отдельных таблицах
+3. **Производительность** - быстрые запросы благодаря индексам и типизации
+4. **Гибкие запросы** - полная поддержка YQL для сложных операций
 
 ## Запуск
 

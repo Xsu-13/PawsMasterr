@@ -43,8 +43,8 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$user_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(userId)),
-                    ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId))
+                    ["$user_id"] = YdbValue.MakeUtf8(userId),
+                    ["$recipe_id"] = YdbValue.MakeUtf8(recipeId)
                 };
 
                 var response = await session.ExecuteDataQuery(
@@ -73,8 +73,8 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$user_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(userId)),
-                    ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId))
+                    ["$user_id"] = YdbValue.MakeUtf8(userId),
+                    ["$recipe_id"] = YdbValue.MakeUtf8(recipeId)
                 };
 
                 var response = await session.ExecuteDataQuery(
@@ -106,7 +106,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$user_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(userId))
+                    ["$user_id"] = YdbValue.MakeUtf8(userId)
                 };
 
                 var response = await session.ExecuteDataQuery(
@@ -147,7 +147,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$user_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(userId))
+                    ["$user_id"] = YdbValue.MakeUtf8(userId)
                 };
 
                 var response = await session.ExecuteDataQuery(
@@ -193,8 +193,8 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$user_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(userId)),
-                    ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId))
+                    ["$user_id"] = YdbValue.MakeUtf8(userId),
+                    ["$recipe_id"] = YdbValue.MakeUtf8(recipeId)
                 };
 
                 var response = await session.ExecuteDataQuery(

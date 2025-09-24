@@ -7,6 +7,7 @@ using System.Text;
 using static Ydb.Sdk.Value.ResultSet;
 using Ydb.Sdk.Yc;
 using Session = Ydb.Sdk.Services.Table.Session;
+using Ydb.Sdk.Client;
 
 namespace Backend.Services
 {
@@ -24,21 +25,17 @@ namespace Backend.Services
                         email = $email,
                         password_hash = $password_hash,
                         image_url = $image_url,
-                        added_recipes = $added_recipes,
-                        favorite_recipes = $favorite_recipes,
                         updated_at = $updated_at
                     WHERE id = $id
                 ";
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(id)),
-                    ["$username"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.Username ?? "")),
-                    ["$email"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.Email ?? "")),
-                    ["$password_hash"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.PasswordHash ?? "")),
-                    ["$image_url"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(user.ImageUrl ?? "")),
-                    ["$added_recipes"] = YdbValue.MakeList((user.AddedRecipes ?? new List<string>()).Select(r => YdbValue.MakeString(Encoding.UTF8.GetBytes(r))).ToList()),
-                    ["$favorite_recipes"] = YdbValue.MakeList((user.FavoriteRecipes ?? new List<string>()).Select(r => YdbValue.MakeString(Encoding.UTF8.GetBytes(r))).ToList()),
+                    ["$id"] = YdbValue.MakeUtf8(id),
+                    ["$username"] = YdbValue.MakeUtf8(user.Username ?? ""),
+                    ["$email"] = YdbValue.MakeUtf8(user.Email ?? ""),
+                    ["$password_hash"] = YdbValue.MakeUtf8(user.PasswordHash ?? ""),
+                    ["$image_url"] = string.IsNullOrEmpty(user.ImageUrl) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(user.ImageUrl),
                     ["$updated_at"] = YdbValue.MakeTimestamp(DateTime.UtcNow)
                 };
 
@@ -88,7 +85,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(id))
+                    ["$id"] = YdbValue.MakeUtf8(id)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -129,15 +126,15 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(id)),
-                    ["$title"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipe.Title)),
-                    ["$description"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(recipe.Description ?? "")),
-                    ["$servings"] = YdbValue.MakeInt32(recipe.Servings),
-                    ["$prep_time"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(recipe.PrepTime ?? "")),
-                    ["$cook_time"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(recipe.CookTime ?? "")),
-                    ["$image_url"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(recipe.ImageUrl ?? "")),
-                    ["$created_at"] = YdbValue.MakeTimestamp(now),
-                    ["$updated_at"] = YdbValue.MakeTimestamp(now)
+                    ["$id"] = YdbValue.MakeUtf8(id),
+                    ["$title"] = YdbValue.MakeUtf8(recipe.Title),
+                    ["$description"] = string.IsNullOrEmpty(recipe.Description) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(recipe.Description),
+                    ["$servings"] = YdbValue.MakeOptionalInt32(recipe.Servings),
+                    ["$prep_time"] = string.IsNullOrEmpty(recipe.PrepTime) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(recipe.PrepTime),
+                    ["$cook_time"] = string.IsNullOrEmpty(recipe.CookTime) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(recipe.CookTime),
+                    ["$image_url"] = string.IsNullOrEmpty(recipe.ImageUrl) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(recipe.ImageUrl),
+                    ["$created_at"] = YdbValue.MakeOptionalTimestamp(now),
+                    ["$updated_at"] = YdbValue.MakeOptionalTimestamp(now)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -188,14 +185,14 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(id)),
-                    ["$title"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipe.Title)),
-                    ["$description"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(recipe.Description ?? "")),
-                    ["$servings"] = YdbValue.MakeInt32(recipe.Servings),
-                    ["$prep_time"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(recipe.PrepTime ?? "")),
-                    ["$cook_time"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(recipe.CookTime ?? "")),
-                    ["$image_url"] = YdbValue.MakeOptionalString(Encoding.UTF8.GetBytes(recipe.ImageUrl ?? "")),
-                    ["$updated_at"] = YdbValue.MakeTimestamp(now)
+                    ["$id"] = YdbValue.MakeUtf8(id),
+                    ["$title"] = YdbValue.MakeUtf8(recipe.Title),
+                    ["$description"] = string.IsNullOrEmpty(recipe.Description) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(recipe.Description),
+                    ["$servings"] = YdbValue.MakeOptionalInt32(recipe.Servings),
+                    ["$prep_time"] = string.IsNullOrEmpty(recipe.PrepTime) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(recipe.PrepTime),
+                    ["$cook_time"] = string.IsNullOrEmpty(recipe.CookTime) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(recipe.CookTime),
+                    ["$image_url"] = string.IsNullOrEmpty(recipe.ImageUrl) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(recipe.ImageUrl),
+                    ["$updated_at"] = YdbValue.MakeOptionalTimestamp(now)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -237,7 +234,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(id))
+                    ["$id"] = YdbValue.MakeUtf8(id)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -267,7 +264,7 @@ namespace Backend.Services
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 query += " WHERE r.title LIKE $search_term OR r.description LIKE $search_term";
-                parameters["$search_term"] = YdbValue.MakeString(Encoding.UTF8.GetBytes($"%{searchTerm}%"));
+                parameters["$search_term"] = YdbValue.MakeUtf8($"%{searchTerm}%");
             }
 
             query += " ORDER BY r.created_at DESC LIMIT $limit";
@@ -318,10 +315,10 @@ namespace Backend.Services
 
                     var parameters = new Dictionary<string, YdbValue>
                     {
-                        ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId)),
+                        ["$recipe_id"] = YdbValue.MakeUtf8(recipeId),
                         ["$ingredient_index"] = YdbValue.MakeUint32((uint)i),
-                        ["$name"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(ingredient.Name)),
-                        ["$quantity"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(ingredient.Quantity))
+                        ["$name"] = YdbValue.MakeUtf8(ingredient.Name),
+                        ["$quantity"] = YdbValue.MakeUtf8(ingredient.Quantity)
                     };
 
                     return await session.ExecuteDataQuery(
@@ -351,7 +348,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId))
+                    ["$recipe_id"] = YdbValue.MakeUtf8(recipeId)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -387,7 +384,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId))
+                    ["$recipe_id"] = YdbValue.MakeUtf8(recipeId)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -417,9 +414,9 @@ namespace Backend.Services
 
                     var parameters = new Dictionary<string, YdbValue>
                     {
-                        ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId)),
+                        ["$recipe_id"] = YdbValue.MakeUtf8(recipeId),
                         ["$step_index"] = YdbValue.MakeUint32((uint)i),
-                        ["$instruction"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(steps[i]))
+                        ["$instruction"] = YdbValue.MakeUtf8(steps[i])
                     };
 
                     return await session.ExecuteDataQuery(
@@ -449,7 +446,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId))
+                    ["$recipe_id"] = YdbValue.MakeUtf8(recipeId)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -481,7 +478,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$recipe_id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(recipeId))
+                    ["$recipe_id"] = YdbValue.MakeUtf8(recipeId)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -550,7 +547,18 @@ namespace Backend.Services
 
         public async Task<TResult> SessionExec<TResult>(Func<Session, Task<TResult>> action)
         {
-            return await _tableClient.SessionExec(action);
+            var result = default(TResult);
+            var response = await _tableClient.SessionExec(async session =>
+            {
+                result = await action(session);
+                // Возвращаем пустой успешный ответ
+                return await session.ExecuteDataQuery(
+                    query: "SELECT 1", 
+                    parameters: new Dictionary<string, YdbValue>(),
+                    txControl: TxControl.BeginSerializableRW().Commit()
+                );
+            });
+            return result!;
         }
 
         // Public methods to access private methods from other services
@@ -570,14 +578,14 @@ namespace Backend.Services
             {
                 var query = @"
                     SELECT id, username, email, password_hash, image_url, 
-                           added_recipes, favorite_recipes, created_at, updated_at
+                           created_at, updated_at
                     FROM users 
                     WHERE id = $id
                 ";
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(userId))
+                    ["$id"] = YdbValue.MakeUtf8(userId)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -611,7 +619,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(selectionId))
+                    ["$id"] = YdbValue.MakeUtf8(selectionId)
                 };
 
                 return await session.ExecuteDataQuery(
@@ -635,59 +643,17 @@ namespace Backend.Services
 
         private Selection MapRowToSelection(Row row)
         {
-            var recipes = new List<string>();
-
-            // Extract recipes list if it exists - используем правильный API для YDB
-            var recipesValue = row["recipes"];
-            if (recipesValue.TypeId == YdbTypeId.List)
-            {
-                var list = recipesValue.GetList();
-                recipes = list.Select(item => Encoding.UTF8.GetString(item.GetString())).ToList();
-            }
-
             return new Selection
             {
                 Id = Encoding.UTF8.GetString(row["id"].GetString()),
                 Title = row["title"].GetOptionalString() != null ?
                     Encoding.UTF8.GetString(row["title"].GetOptionalString()) : null,
-                Recipes = recipes
+                Recipes = new List<string>() // Список загружается отдельно
             };
         }
 
         private User MapRowToUser(Row row)
         {
-            var addedRecipes = new List<string>();
-            var favoriteRecipes = new List<string>();
-
-            // Extract lists if they exist - используем правильный API для YDB
-            try
-            {
-                var addedRecipesValue = row["added_recipes"];
-                if (addedRecipesValue.TypeId == YdbTypeId.List)
-                {
-                    var list = addedRecipesValue.GetList();
-                    addedRecipes = list.Select(item => Encoding.UTF8.GetString(item.GetString())).ToList();
-                }
-            }
-            catch
-            {
-                // Поле может отсутствовать
-            }
-
-            try
-            {
-                var favoriteRecipesValue = row["favorite_recipes"];
-                if (favoriteRecipesValue.TypeId == YdbTypeId.List)
-                {
-                    var list = favoriteRecipesValue.GetList();
-                    favoriteRecipes = list.Select(item => Encoding.UTF8.GetString(item.GetString())).ToList();
-                }
-            }
-            catch
-            {
-                // Поле может отсутствовать
-            }
-
             return new User
             {
                 Id = Encoding.UTF8.GetString(row["id"].GetString()),
@@ -696,8 +662,8 @@ namespace Backend.Services
                 PasswordHash = Encoding.UTF8.GetString(row["password_hash"].GetString()),
                 ImageUrl = row["image_url"].GetOptionalString() != null ?
                     Encoding.UTF8.GetString(row["image_url"].GetOptionalString()) : null,
-                AddedRecipes = addedRecipes,
-                FavoriteRecipes = favoriteRecipes,
+                AddedRecipes = new List<string>(), // Списки загружаются отдельно
+                FavoriteRecipes = new List<string>(), // Списки загружаются отдельно
                 CreatedAt = row["created_at"].GetTimestamp(),
                 UpdatedAt = row["updated_at"].GetTimestamp()
             };

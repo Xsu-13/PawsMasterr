@@ -140,7 +140,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$email"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(email))
+                    ["$email"] = YdbValue.MakeUtf8(email)
                 };
 
                 var response = await session.ExecuteDataQuery(
@@ -173,7 +173,7 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(userId))
+                    ["$id"] = YdbValue.MakeUtf8(userId)
                 };
 
                 var response = await session.ExecuteDataQuery(
@@ -205,12 +205,11 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.Id)),
-                    ["$username"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.Username)),
-                    ["$email"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.Email)),
-                    ["$password_hash"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.PasswordHash)),
-                    ["$image_url"] = YdbValue.MakeOptionalString(
-                        string.IsNullOrEmpty(user.ImageUrl) ? null : Encoding.UTF8.GetBytes(user.ImageUrl)),
+                    ["$id"] = YdbValue.MakeUtf8(user.Id),
+                    ["$username"] = YdbValue.MakeUtf8(user.Username),
+                    ["$email"] = YdbValue.MakeUtf8(user.Email),
+                    ["$password_hash"] = YdbValue.MakeUtf8(user.PasswordHash),
+                    ["$image_url"] = string.IsNullOrEmpty(user.ImageUrl) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(user.ImageUrl),
                     ["$created_at"] = YdbValue.MakeTimestamp(user.CreatedAt),
                     ["$updated_at"] = YdbValue.MakeTimestamp(user.UpdatedAt)
                 };
@@ -246,12 +245,11 @@ namespace Backend.Services
 
                 var parameters = new Dictionary<string, YdbValue>
                 {
-                    ["$id"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.Id)),
-                    ["$username"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.Username)),
-                    ["$email"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.Email)),
-                    ["$password_hash"] = YdbValue.MakeString(Encoding.UTF8.GetBytes(user.PasswordHash)),
-                    ["$image_url"] = YdbValue.MakeOptionalString(
-                        string.IsNullOrEmpty(user.ImageUrl) ? null : Encoding.UTF8.GetBytes(user.ImageUrl)),
+                    ["$id"] = YdbValue.MakeUtf8(user.Id),
+                    ["$username"] = YdbValue.MakeUtf8(user.Username),
+                    ["$email"] = YdbValue.MakeUtf8(user.Email),
+                    ["$password_hash"] = YdbValue.MakeUtf8(user.PasswordHash),
+                    ["$image_url"] = string.IsNullOrEmpty(user.ImageUrl) ? YdbValue.MakeOptionalUtf8(null) : YdbValue.MakeOptionalUtf8(user.ImageUrl),
                     ["$updated_at"] = YdbValue.MakeTimestamp(user.UpdatedAt)
                 };
 
