@@ -3,7 +3,6 @@ using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
-using MongoDB.Bson;
 
 namespace Cooking.Controllers
 {
@@ -79,7 +78,7 @@ namespace Cooking.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(RecipeDto recipe)
         {
-            recipe.Id = ObjectId.GenerateNewId().ToString();
+            recipe.Id = Guid.NewGuid().ToString();
             await _recipeService.CreateRecipeAsync(recipe);
             return CreatedAtAction(nameof(Get), new { id = recipe.Id }, recipe);
         }
@@ -87,7 +86,7 @@ namespace Cooking.Controllers
         [HttpPost("user/{userId}")]
         public async Task<ActionResult> CreateByUser(string userId, RecipeDto recipe)
         {
-            recipe.Id = ObjectId.GenerateNewId().ToString();
+            recipe.Id = Guid.NewGuid().ToString();
             await _recipeService.CreateRecipeFromUserAsync(userId, recipe);
             return CreatedAtAction(nameof(Get), new { id = recipe.Id }, recipe);
         }
@@ -150,7 +149,7 @@ namespace Cooking.Controllers
         {
             foreach (var recipe in recipes)
             {
-                recipe.Id = ObjectId.GenerateNewId().ToString();
+                recipe.Id = Guid.NewGuid().ToString();
             }
 
             if (recipes != null)

@@ -1,114 +1,120 @@
 ﻿using AutoMapper;
 using Backend.Models;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace Backend.Services
 {
     public class RecipeService
     {
-        private readonly IMongoCollection<Recipe> _recipes;
-        private readonly IMongoCollection<User> _users;
+        private readonly YdbService _ydbService;
         private readonly IMapper _mapper;
 
-        public RecipeService(IOptions<MongoDBSettings> settings, IMapper mapper)
+        public RecipeService(YdbService ydbService, IMapper mapper)
         {
-            MongoClient client = new MongoClient(settings.Value.ConnectionURI);
-            IMongoDatabase database = client.GetDatabase(settings.Value.DatabaseName);
-            _recipes = database.GetCollection<Recipe>(settings.Value.RecipesCollection);
-            _users = database.GetCollection<User>(settings.Value.UsersCollection);
+            _ydbService = ydbService;
             _mapper = mapper;
         }
 
         public async Task<List<RecipeDto>> GetRecipesAsync()
         {
-            return _mapper.Map<List<RecipeDto>>(await _recipes.Find(recipe => true).ToListAsync());
+            var recipes = await _ydbService.SearchRecipesAsync();
+            return _mapper.Map<List<RecipeDto>>(recipes);
         }
+
         public async Task<RecipeDto?> GetRecipeAsync(string id)
         {
-            var recipe = await _recipes.Find(recipe => recipe.id.ToString() == id).FirstOrDefaultAsync();
-            return _mapper.Map<RecipeDto>(recipe);
+            var recipe = await _ydbService.GetRecipeAsync(id);
+            return _mapper.Map<RecipeDto?>(recipe);
         }
+
         public async Task<List<RecipeDto>> GetRecipesBySubTitleAsync(string subtitle)
         {
-            var filter = Builders<Recipe>.Filter.Regex(r => r.title, new MongoDB.Bson.BsonRegularExpression(subtitle, "i"));
-            var recipes = await _recipes.Find(filter).ToListAsync();
-
-            return _mapper.Map<List<RecipeDto>>(recipes);
+            // YDB Document API doesn't support complex text search like ILIKE
+            // We'll need to fetch all and filter in memory or use YQL functions
+            var recipes = await _ydbService.SearchRecipesAsync();
+            var filtered = recipes.Where(r => r.Title?.Contains(subtitle, StringComparison.OrdinalIgnoreCase) == true);
+            return _mapper.Map<List<RecipeDto>>(filtered);
         }
 
         public async Task<List<RecipeDto>> GetRecipesByIngredientsAsync(string[] ingredients)
         {
-            var filters = ingredients.Select(ingredient =>
-                Builders<Recipe>.Filter.ElemMatch(r => r.ingredients, i => i.name.ToLower() == ingredient.ToLower())
-            );
-
-            var filter = Builders<Recipe>.Filter.Or(filters);
-
-            return _mapper.Map<List<RecipeDto>>(await _recipes.Find(filter).ToListAsync());
+            var recipes = await _ydbService.SearchRecipesAsync();
+            var filtered = recipes.Where(r => 
+                r.Ingredients.Any(i => ingredients.Contains(i.Name, StringComparer.OrdinalIgnoreCase)));
+            return _mapper.Map<List<RecipeDto>>(filtered);
         }
 
         public async Task<List<RecipeDto>> GetRecipesByIngredientsCountAsync(int ingredientsCount)
         {
-            var recipes = await _recipes.Find(recipe => recipe.ingredients.Count() <= ingredientsCount).ToListAsync();
-
-            return _mapper.Map<List<RecipeDto>>(recipes);
+            var recipes = await _ydbService.SearchRecipesAsync();
+            var filtered = recipes.Where(r => r.Ingredients.Count <= ingredientsCount);
+            return _mapper.Map<List<RecipeDto>>(filtered);
         }
 
         public async Task<List<RecipeDto>> GetRecipesByPersonCountAsync(int personCount)
         {
-            var recipes = await _recipes.Find(recipe => recipe.servings == personCount).ToListAsync();
-
-            return _mapper.Map<List<RecipeDto>>(recipes);
+            var recipes = await _ydbService.SearchRecipesAsync();
+            var filtered = recipes.Where(r => r.Servings == personCount);
+            return _mapper.Map<List<RecipeDto>>(filtered);
         }
 
         public async Task CreateRecipeAsync(RecipeDto recipeDto)
         {
             var recipe = _mapper.Map<Recipe>(recipeDto);
-            await _recipes.InsertOneAsync(recipe);
+            recipe.Id = await _ydbService.CreateRecipeAsync(recipe);
         }
+
         public async Task CreateRecipeFromUserAsync(string userId, RecipeDto recipeDto)
         {
-            var recipe = _mapper.Map<Recipe>(recipeDto);
-            await _recipes.InsertOneAsync(recipe);
-
-            var update = Builders<User>.Update.AddToSet(u => u.AddedRecipes, recipe.id);
-            await _users.UpdateOneAsync(u => u.Id == userId, update);
+            await CreateRecipeAsync(recipeDto);
+            
+            // Add to user's added recipes
+            var user = await _ydbService.GetDocumentAsync<User>("users", userId);
+            if (user != null)
+            {
+                user.AddedRecipes.Add(recipeDto.Id!);
+                await _ydbService.UpdateDocumentAsync("users", userId, user);
+            }
         }
 
         public async Task UpdateRecipeAsync(string id, RecipeDto recipeDto)
         {
             var recipe = _mapper.Map<Recipe>(recipeDto);
-            await _recipes.ReplaceOneAsync(r => r.id.ToString() == id, recipe);
+            recipe.Id = id;
+            await _ydbService.UpdateRecipeAsync(id, recipe);
         }
 
         public async Task DeleteRecipeAsync(string id)
         {
-            await _recipes.DeleteOneAsync(r => r.id.ToString() == id);
+            await _ydbService.DeleteRecipeAsync(id);
         }
 
         public async Task DeleteRecipeFromUserAsync(string userId, string recipeId)
         {
-            var update = Builders<User>.Update.Pull("AddedRecipes", ObjectId.Parse(recipeId));
-            await _users.UpdateOneAsync(u => u.Id == userId, update);
-
-            await _recipes.DeleteOneAsync(r => r.id.ToString() == recipeId);
+            var user = await _ydbService.GetDocumentAsync<User>("users", userId);
+            if (user != null)
+            {
+                user.AddedRecipes.Remove(recipeId);
+                await _ydbService.UpdateUserAsync(userId, user);
+            }
+            await _ydbService.DeleteRecipeAsync(recipeId);
         }
 
         public async Task UpdateRecipeImageAsync(string recipeId, string imageUrl)
         {
-            var update = Builders<Recipe>.Update.Set(r => r.ImageUrl, imageUrl);
-            await _recipes.UpdateOneAsync(r => r.id == ObjectId.Parse(recipeId), update);
+            var recipe = await _ydbService.GetRecipeAsync(recipeId);
+            if (recipe != null)
+            {
+                recipe.ImageUrl = imageUrl;
+                await _ydbService.UpdateRecipeAsync(recipeId, recipe);
+            }
         }
 
         public async Task ImportRecipesAsync(List<RecipeDto> recipeDtos)
         {
-            var recipes = _mapper.Map<List<Recipe>>(recipeDtos);
-            await _recipes.InsertManyAsync(recipes);
+            foreach (var dto in recipeDtos)
+            {
+                await CreateRecipeAsync(dto);
+            }
         }
     }
 }

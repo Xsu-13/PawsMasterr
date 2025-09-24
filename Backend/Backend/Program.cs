@@ -3,7 +3,6 @@ using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.OpenApi.Models;
-using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -14,7 +13,10 @@ var configuration = builder.Configuration;
 services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 services.AddApiAuthentication(configuration);
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
+
+// Configure YDB Document API
+services.Configure<YdbSettings>(configuration.GetSection("Ydb"));
+services.AddSingleton<YdbService>();
 services.Configure<YandexS3Options>(builder.Configuration.GetSection("YandexS3"));
 
 services.AddSingleton<JwtProvider>();
@@ -23,13 +25,8 @@ services.AddScoped<RecipeService>();
 services.AddScoped<UserService>();
 services.AddScoped<FavoriteRecipeService>();
 services.AddScoped<SelectionService>();
-services.AddSingleton<IImageStorageService>(sp =>
-{
-    var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<YandexS3Options>>().Value;
-    return new YandexS3ImageStorageService(options);
-});
+services.AddSingleton<IImageStorageService, YandexS3ImageStorageService>();
 
-//services.AddControllersWithViews();
 services.AddControllers();
 
 services.AddEndpointsApiExplorer();

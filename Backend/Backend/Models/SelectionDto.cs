@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+﻿using System;
 
 namespace Backend.Models
 {
@@ -6,6 +6,6 @@ namespace Backend.Models
     {
         public string id { get; set; }
         public string? title { get; set; }
-        public List<string> recipes { get; set; } = new List<string>();
+        public List<Guid> recipes { get; set; } = new List<Guid>();
     }
 }

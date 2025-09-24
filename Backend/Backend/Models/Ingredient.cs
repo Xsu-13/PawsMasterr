@@ -1,8 +1,13 @@
-﻿namespace Backend.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Backend.Models
 {
     public class Ingredient
     {
-        public string name { get; set; }
-        public string quantity { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = null!;
+        
+        [JsonPropertyName("quantity")]
+        public string Quantity { get; set; } = null!;
     }
 }
