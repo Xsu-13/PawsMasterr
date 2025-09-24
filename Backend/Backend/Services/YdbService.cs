@@ -367,8 +367,8 @@ namespace Backend.Services
                 {
                     ingredients.Add(new Ingredient
                     {
-                        Name = Encoding.UTF8.GetString(row["name"].GetString()),
-                        Quantity = Encoding.UTF8.GetString(row["quantity"].GetString())
+                        Name = row["name"].GetOptionalUtf8() ?? "",
+                        Quantity = row["quantity"].GetOptionalUtf8() ?? ""
                     });
                 }
             }
@@ -463,7 +463,7 @@ namespace Backend.Services
                 var resultSet = response.Result.ResultSets[0];
                 foreach (var row in resultSet.Rows)
                 {
-                    steps.Add(Encoding.UTF8.GetString(row["instruction"].GetString()));
+                    steps.Add(row["instruction"].GetOptionalUtf8() ?? "");
                 }
             }
 
@@ -499,19 +499,15 @@ namespace Backend.Services
         {
             return new Recipe
             {
-                Id = Encoding.UTF8.GetString(row["id"].GetString()),
-                Title = Encoding.UTF8.GetString(row["title"].GetString()),
-                Description = row["description"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["description"].GetOptionalString()) : null,
-                Servings = row["servings"].GetInt32(),
-                PrepTime = row["prep_time"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["prep_time"].GetOptionalString()) : null,
-                CookTime = row["cook_time"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["cook_time"].GetOptionalString()) : null,
-                ImageUrl = row["image_url"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["image_url"].GetOptionalString()) : null,
-                CreatedAt = row["created_at"].GetTimestamp(),
-                UpdatedAt = row["updated_at"].GetTimestamp()
+                Id = row["id"].GetOptionalUtf8() ?? "",
+                Title = row["title"].GetOptionalUtf8() ?? "",
+                Description = row["description"].GetOptionalUtf8(),
+                Servings = row["servings"].GetOptionalInt32() ?? 0,
+                PrepTime = row["prep_time"].GetOptionalUtf8(),
+                CookTime = row["cook_time"].GetOptionalUtf8(),
+                ImageUrl = row["image_url"].GetOptionalUtf8(),
+                CreatedAt = row["created_at"].GetOptionalTimestamp() ?? DateTime.UtcNow,
+                UpdatedAt = row["updated_at"].GetOptionalTimestamp() ?? DateTime.UtcNow
             };
         }
 
@@ -612,7 +608,7 @@ namespace Backend.Services
             var response = (ExecuteDataQueryResponse)await _tableClient.SessionExec(async session =>
             {
                 var query = @"
-                    SELECT id, title, recipes
+                    SELECT id, title
                     FROM selections 
                     WHERE id = $id
                 ";
@@ -645,9 +641,8 @@ namespace Backend.Services
         {
             return new Selection
             {
-                Id = Encoding.UTF8.GetString(row["id"].GetString()),
-                Title = row["title"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["title"].GetOptionalString()) : null,
+                Id = row["id"].GetOptionalUtf8() ?? "",
+                Title = row["title"].GetOptionalUtf8(),
                 Recipes = new List<string>() // Список загружается отдельно
             };
         }
@@ -656,12 +651,11 @@ namespace Backend.Services
         {
             return new User
             {
-                Id = Encoding.UTF8.GetString(row["id"].GetString()),
-                Username = Encoding.UTF8.GetString(row["username"].GetString()),
-                Email = Encoding.UTF8.GetString(row["email"].GetString()),
-                PasswordHash = Encoding.UTF8.GetString(row["password_hash"].GetString()),
-                ImageUrl = row["image_url"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["image_url"].GetOptionalString()) : null,
+                Id = row["id"].GetOptionalUtf8() ?? "",
+                Username = row["username"].GetOptionalUtf8() ?? "",
+                Email = row["email"].GetOptionalUtf8() ?? "",
+                PasswordHash = row["password_hash"].GetOptionalUtf8() ?? "",
+                ImageUrl = row["image_url"].GetOptionalUtf8(),
                 AddedRecipes = new List<string>(), // Списки загружаются отдельно
                 FavoriteRecipes = new List<string>(), // Списки загружаются отдельно
                 CreatedAt = row["created_at"].GetTimestamp(),

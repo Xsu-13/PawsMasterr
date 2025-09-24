@@ -272,12 +272,11 @@ namespace Backend.Services
         {
             return new User
             {
-                Id = Encoding.UTF8.GetString(row["id"].GetString()),
-                Username = Encoding.UTF8.GetString(row["username"].GetString()),
-                Email = Encoding.UTF8.GetString(row["email"].GetString()),
-                PasswordHash = Encoding.UTF8.GetString(row["password_hash"].GetString()),
-                ImageUrl = row["image_url"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["image_url"].GetOptionalString()) : null,
+                Id = row["id"].GetOptionalUtf8() ?? "",
+                Username = row["username"].GetOptionalUtf8() ?? "",
+                Email = row["email"].GetOptionalUtf8() ?? "",
+                PasswordHash = row["password_hash"].GetOptionalUtf8() ?? "",
+                ImageUrl = row["image_url"].GetOptionalUtf8(),
                 CreatedAt = row["created_at"].GetTimestamp(),
                 UpdatedAt = row["updated_at"].GetTimestamp()
             };

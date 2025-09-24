@@ -211,8 +211,8 @@ namespace Backend.Services
                         var row = resultSet.Rows[0];
                         return new FavoriteRecipe
                         {
-                            UserId = Encoding.UTF8.GetString(row["user_id"].GetString()),
-                            RecipeId = Encoding.UTF8.GetString(row["recipe_id"].GetString()),
+                            UserId = row["user_id"].GetOptionalUtf8() ?? "",
+                            RecipeId = row["recipe_id"].GetOptionalUtf8() ?? "",
                             AddedAt = row["added_at"].GetTimestamp()
                         };
                     }
@@ -225,19 +225,15 @@ namespace Backend.Services
         {
             return new Recipe
             {
-                Id = Encoding.UTF8.GetString(row["id"].GetString()),
-                Title = Encoding.UTF8.GetString(row["title"].GetString()),
-                Description = row["description"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["description"].GetOptionalString()) : null,
-                Servings = row["servings"].GetInt32(),
-                PrepTime = row["prep_time"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["prep_time"].GetOptionalString()) : null,
-                CookTime = row["cook_time"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["cook_time"].GetOptionalString()) : null,
-                ImageUrl = row["image_url"].GetOptionalString() != null ?
-                    Encoding.UTF8.GetString(row["image_url"].GetOptionalString()) : null,
-                CreatedAt = row["created_at"].GetTimestamp(),
-                UpdatedAt = row["updated_at"].GetTimestamp()
+                Id = row["id"].GetOptionalUtf8() ?? "",
+                Title = row["title"].GetOptionalUtf8() ?? "",
+                Description = row["description"].GetOptionalUtf8(),
+                Servings = row["servings"].GetOptionalInt32() ?? 0,
+                PrepTime = row["prep_time"].GetOptionalUtf8(),
+                CookTime = row["cook_time"].GetOptionalUtf8(),
+                ImageUrl = row["image_url"].GetOptionalUtf8(),
+                CreatedAt = row["created_at"].GetOptionalTimestamp() ?? DateTime.UtcNow,
+                UpdatedAt = row["updated_at"].GetOptionalTimestamp() ?? DateTime.UtcNow
             };
         }
     }
