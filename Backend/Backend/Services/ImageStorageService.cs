@@ -10,10 +10,9 @@ namespace Backend.Services
     {
         Task<string> UploadAsync(Stream content, string contentType, string fileName, string category, CancellationToken cancellationToken = default);
     }
-    //public class YandexS3ImageStorageService : IImageStorageService
     public class YandexS3ImageStorageService : IImageStorageService
     {
-        /*private readonly IAmazonS3 _s3Client;
+        private readonly IAmazonS3 _s3Client;
         private readonly YandexS3Options _options;
 
         public YandexS3ImageStorageService(YandexS3Options options)
@@ -55,10 +54,6 @@ namespace Backend.Services
             // Fallback to default Yandex endpoint
             var serviceUrl = _options.ServiceUrl.TrimEnd('/');
             return $"{serviceUrl}/{_options.BucketName}/{key}";
-        }*/
-        public Task<string> UploadAsync(Stream content, string contentType, string fileName, string category, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
         }
     }
 }

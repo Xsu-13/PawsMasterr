@@ -277,8 +277,8 @@ namespace Backend.Services
                 Email = row["email"].GetOptionalUtf8() ?? "",
                 PasswordHash = row["password_hash"].GetOptionalUtf8() ?? "",
                 ImageUrl = row["image_url"].GetOptionalUtf8(),
-                CreatedAt = row["created_at"].GetTimestamp(),
-                UpdatedAt = row["updated_at"].GetTimestamp()
+                CreatedAt = row["created_at"].GetOptionalTimestamp() ?? DateTime.UtcNow,
+                UpdatedAt = row["updated_at"].GetOptionalTimestamp() ?? DateTime.UtcNow
             };
         }
     }

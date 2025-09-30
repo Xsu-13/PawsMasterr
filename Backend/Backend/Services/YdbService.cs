@@ -3,11 +3,9 @@ using Ydb.Sdk.Services.Table;
 using Ydb.Sdk.Value;
 using Backend.Models;
 using Microsoft.Extensions.Options;
-using System.Text;
 using static Ydb.Sdk.Value.ResultSet;
 using Ydb.Sdk.Yc;
 using Session = Ydb.Sdk.Services.Table.Session;
-using Ydb.Sdk.Client;
 
 namespace Backend.Services
 {
@@ -658,8 +656,8 @@ namespace Backend.Services
                 ImageUrl = row["image_url"].GetOptionalUtf8(),
                 AddedRecipes = new List<string>(), // Списки загружаются отдельно
                 FavoriteRecipes = new List<string>(), // Списки загружаются отдельно
-                CreatedAt = row["created_at"].GetTimestamp(),
-                UpdatedAt = row["updated_at"].GetTimestamp()
+                CreatedAt = row["created_at"].GetOptionalTimestamp() ?? DateTime.UtcNow,
+                UpdatedAt = row["updated_at"].GetOptionalTimestamp() ?? DateTime.UtcNow
             };
         }
 

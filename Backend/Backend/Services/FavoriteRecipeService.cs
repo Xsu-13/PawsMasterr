@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Backend.Models;
 using static Ydb.Sdk.Value.ResultSet;
-using System.Text;
 using Ydb.Sdk.Value;
 using Ydb.Sdk.Services.Table;
 
@@ -213,7 +212,7 @@ namespace Backend.Services
                         {
                             UserId = row["user_id"].GetOptionalUtf8() ?? "",
                             RecipeId = row["recipe_id"].GetOptionalUtf8() ?? "",
-                            AddedAt = row["added_at"].GetTimestamp()
+                            AddedAt = row["added_at"].GetOptionalTimestamp() ?? DateTime.UtcNow
                         };
                     }
                 }
